@@ -1,7 +1,9 @@
 from LibraryLoader import LibraryLoader
 from robot.api.deco import keyword
-from Utilities import get_uri
+from Utilities import get_uri, get_csrfmiddlewaretoken
 from robot.api import logger
+import requests
+from collections import ChainMap
 
 
 class AdminUser:
@@ -16,18 +18,48 @@ class AdminUser:
         self._loader = LibraryLoader.get_instance()  # singleton
         # read all necessary variables from CommonVariables.py
         self._admin = self._loader.builtin.get_variable_value("${ADMIN}")
-        self._session_alias = self._loader.builtin.get_variable_value("${ADMIN_SESSION}")
         self._api_base_url = self._loader.builtin.get_variable_value("${API_BASE_URL}")
         self._postings_uri = self._loader.builtin.get_variable_value("${POSTINGS_URI}")
         self._invalid_postings_uri = self._loader.builtin.get_variable_value("${INVALID_POSTINGS_URI}")
+        self._accept_text_html_header = self._loader.builtin.get_variable_value("${ACCEPT_TEXT_HTML_HEADER}")
+        self._accept_application_json_header = self._loader.builtin.get_variable_value("${ACCEPT_APPLICATION_JSON_HEADER}") # post
+        self._additional_put_cookie_tabstyle = self._loader.builtin.get_variable_value("${ADDITIONAL_PUT_COOKIE_TABSTYLE}")
+        self._content_type_is_form_header = self._loader.builtin.get_variable_value("${CONTENT_TYPE_IS_FORM_HEADER}")
         self._expected_options_response_headers = self._admin["OPTIONS_RESPONSE_HEADERS"]
+        self._admin_login_uri = self._loader.builtin.get_variable_value("${ADMIN_LOGIN_URI}")
+        self._admin_login_query_params = self._loader.builtin.get_variable_value("${ADMIN_LOGIN_QUERY_PARAMS}")
 
-        self._loader.rl.create_session(alias=self._session_alias, url=self._api_base_url, cookies={}, verify=True)
+        self._session = requests.Session()
+        self.login_as_admin()
+
+    def login_as_admin(self):
+        login_url = f'{self._api_base_url}{self._admin_login_uri}'
+
+        # request the login page in HTML form
+        final_get_request_headers = ChainMap( {'Accept' : self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'] )
+        login_page_get_response = self._session.get(login_url, params=self._admin_login_query_params, headers=final_get_request_headers )
+        assert self._session.cookies['csrftoken']          # the token must not be an empty string
+
+        csrfmiddlewaretoken = get_csrfmiddlewaretoken(login_page_get_response.text)
+        assert csrfmiddlewaretoken # the token must not be an empty string
+
+        referer_url = f'{login_url}{self._admin_login_query_params}'
+        overwritten_post_request_headers = {'Referer': referer_url, 'Content-Type': self._content_type_is_form_header }
+        final_post_request_headers = ChainMap(overwritten_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
+        login_form_data = dict(username=self._admin['USERNAME'], password=self._admin['PASSWORD'],
+                               csrfmiddlewaretoken=csrfmiddlewaretoken, next='/admin/')
+        # make login request by submitting form encoded data
+        login_form_post_response = self._session.post(url=login_url, data=login_form_data, headers=final_post_request_headers)
+        assert login_form_post_response.status_code == 200  # logged in; session has sessionid must be in cookies now
+        assert 'sessionid' in self._session.cookies
+
+    def __del__(self):
+        self._session.close()
 
     @keyword
     def make_options_request(self):
-        return self._loader.rl.options_request(alias=self._session_alias, uri=self._postings_uri,
-                                               headers=self._admin['OPTIONS_REQUEST_HEADERS'])
+        return self._session.options(url=f'{self._api_base_url}{self._postings_uri}', headers=self._admin['OPTIONS_REQUEST_HEADERS'])
+
     @keyword
     def verify_options_response(self, options_response):
         assert options_response.status_code == 200
@@ -38,32 +70,51 @@ class AdminUser:
 
     @keyword
     def make_post_request(self, posting):
-        return self._loader.rl.post_request(alias=self._session_alias, uri=self._postings_uri,
-                                            headers=self._admin['POST_REQUEST_HEADERS'],  data=posting)
+        # we need to get the posting form in html format provided by the server. The form has the needed csrfmiddlewaretoken in POST request
+        get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+        post_form_get_response = self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=get_request_headers)
+
+        csrfmiddlewaretoken = get_csrfmiddlewaretoken(post_form_get_response.text)
+        assert csrfmiddlewaretoken # the token must not be an empty string
+        additional_post_request_headers = {'X-CSRFTOKEN':csrfmiddlewaretoken}
+        final_post_request_headers = ChainMap(additional_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
+
+        return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', json=posting, headers=final_post_request_headers)
 
     @keyword
     def make_get_request(self):
-        return self._loader.rl.get_request(alias=self._session_alias, uri=self._postings_uri,
-                                           headers=self._admin['GET_REQUEST_HEADERS'])
+        return self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
 
     @keyword
     def make_bad_get_request(self):
-        return self._loader.rl.get_request(alias=self._session_alias, uri=self._invalid_postings_uri,
-                                           headers=self._admin['GET_REQUEST_HEADERS'])
+        return self._session.get(url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
 
     @keyword
     def make_put_request(self, posting):
-        self._admin['PUT_REQUEST_HEADERS']['Referer'] = posting['url']
-        put_request_uri = get_uri(posting['url'])
-        return self._loader.rl.put_request(alias=self._session_alias, uri=put_request_uri,
-                                           headers=self._admin['PUT_REQUEST_HEADERS'],  data=posting)
+        get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+        put_form_get_response = self._session.get(url=posting['url'], headers=get_request_headers)
+
+        csrfmiddlewaretoken = get_csrfmiddlewaretoken(put_form_get_response.text)
+        assert csrfmiddlewaretoken # the token must not be an empty string
+
+        overwriting_put_request_headers = {'Referer':posting['url'], 'X-CSRFTOKEN':csrfmiddlewaretoken }
+        final_put_request_headers = ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
+
+        return self._session.put(url=posting['url'], headers=final_put_request_headers,  json=posting, cookies=self._additional_put_cookie_tabstyle)
 
     @keyword
     def make_delete_request(self, posting):
-        self._admin['DELETE_REQUEST_HEADERS']['Referer'] = posting['url']
-        delete_request_uri = get_uri(posting['url'])
-        return self._loader.rl.delete_request(alias=self._session_alias, uri=delete_request_uri,
-                                              headers=self._admin['DELETE_REQUEST_HEADERS'],  data=posting)
+        # first we need to get csrfmiddleware token, needed to make the delete request
+        ultimate_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+        delete_posting_form_get_response = self._session.get(url=posting['url'], headers=ultimate_get_headers)
+
+        csrfmiddlewaretoken = get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
+        assert csrfmiddlewaretoken # the token must not be an empty string
+
+        overwriting_delete_headers = {'X-CSRFTOKEN': csrfmiddlewaretoken, 'Referer': posting['url'] }
+        ultimate_delete_headers = ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
+
+        return self._session.delete(url=posting['url'], data=posting, headers=ultimate_delete_headers)
 
 
 

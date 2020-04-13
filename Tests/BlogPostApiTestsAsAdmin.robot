@@ -9,7 +9,6 @@ Resource         ../Libraries/Src/CommonLibraryImport.robot
 Library          AdminUser
 Resource         CommonResource.robot
 Suite Setup      Suite Setup
-Suite Teardown   Suite Teardown
 Test Teardown    Test Teardown
 Test Setup       Test Setup
 
@@ -20,9 +19,6 @@ Test Setup       Test Setup
 Suite Setup
     ${posting_spec} =   Set Variable    ${ADMIN}[EXPECTED_API_SPEC][actions][POST]
     Set Suite Variable      ${POSTING_SPEC}     ${posting_spec}
-
-Suite Teardown
-    Delete All Sessions
 
 Test Setup
     "Pre-Set Postings" Are Cached

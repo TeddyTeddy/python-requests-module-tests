@@ -1,0 +1,227 @@
+<!DOCTYPE html>\n\n<html lang="en-us" >\n<head>\n<title>Log in | Django site admin</title>\n<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />\n<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />\n\n\n\n\n<meta name="robots" content="NONE,NOARCHIVE" />\n</head>\n\n\n<body class=" login"\n  data-admin-utc-offset="10800">\n\n<!-- Container -->\n<div id="container">\n\n    \n    <!-- Header -->\n    <div id="header">\n        <div id="branding">\n        \n<h1 id="site-name"><a href="/admin/">Django administration</a></h1>\n\n        </div>\n        \n        \n    </div>\n    <!-- END Header -->\n    \n    \n\n    \n        \n    \n\n    <!-- Content -->\n    <div id="content" class="colM">\n        \n        \n        \n\n\n\n\n<div id="content-main">\n\n\n\n<form action="/admin/login/?next=%2Fadmin%2F" method="post" id="login-form"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'waJZti9hxv9jz3xu3kFPMtgXHXP4jcTbzDMsTTyLjGJKTIY5GiNxx6xfH1zT8Sxx\' />\n  <div class="form-row">\n    \n    <label class="required" for="id_username">Username:</label> <input type="text" name="username" autofocus maxlength="254" required id="id_username" />\n  </div>\n  <div class="form-row">\n    \n    <label class="required" for="id_password">Password:</label> <input type="password" name="password" required id="id_password" />\n    <input type="hidden" name="next" value="/admin/" />\n  </div>\n  \n  \n  <div class="submit-row">\n    <label>&nbsp;</label><input type="submit" value="Log in" />\n  </div>\n</form>\n\n</div>\n\n        \n        <br class="clear" />\n    </div>\n    <!-- END Content -->\n\n    <div id="footer"></div>\n</div>\n<!-- END Container -->\n\n</body>\n</html>\n
+
+name=\'csrfmiddlewaretoken\' value=\'(.+)\
+
+
+
+.+<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'
+
+<form action="/admin/login/?next=%2Fadmin%2F" method="post" id="login-form"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'waJZti9hxv9jz3xu3kFPMtgXHXP4jcTbzDMsTTyLjGJKTIY5GiNxx6xfH1zT8Sxx\' />\n
+
+
+
+
+(venv) (base) hakan@hakan-VirtualBox:~/Python/Robot/python-requests-module-tests$ python
+Python 3.7.4 (default, Aug 13 2019, 20:35:49) 
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import re
+>>> import requests
+>>> s = ''
+>>> assert s
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AssertionError
+>>> s = 'hkn'
+>>> assert s
+>>> session = requests.Session()
+>>> csrftoken= '9aDjnyEEDA2eMv0wp3NyoHK4iOcB3ek6XCu65ewXfwfFyDRpN1QVkrA98mdHSf4r'
+>>> session.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+>>> session.headers['csrftoken'] = '9aDjnyEEDA2eMv0wp3NyoHK4iOcB3ek6XCu65ewXfwfFyDRpN1QVkrA98mdHSf4r'
+>>> session.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'csrftoken': '9aDjnyEEDA2eMv0wp3NyoHK4iOcB3ek6XCu65ewXfwfFyDRpN1QVkrA98mdHSf4r'}
+>>> del session.headers['crsftoken']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/hakan/Python/Robot/python-requests-module-tests/venv/lib/python3.7/site-packages/requests/structures.py", line 57, in __delitem__
+    del self._store[key.lower()]
+KeyError: 'crsftoken'
+>>> del session.headers['csrftoken']
+>>> session.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+>>> login_page_response = session.get('https://glacial-earth-31542.herokuapp.com/admin/login/', params={'next':'/admin/'})
+>>> login_page_response.response_code
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'Response' object has no attribute 'response_code'
+>>> login_page_response.status_code
+200
+>>> login_page_response.text
+'<!DOCTYPE html>\n\n<html lang="en-us" >\n<head>\n<title>Log in | Django site admin</title>\n<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />\n<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />\n\n\n\n\n<meta name="robots" content="NONE,NOARCHIVE" />\n</head>\n\n\n<body class=" login"\n  data-admin-utc-offset="10800">\n\n<!-- Container -->\n<div id="container">\n\n    \n    <!-- Header -->\n    <div id="header">\n        <div id="branding">\n        \n<h1 id="site-name"><a href="/admin/">Django administration</a></h1>\n\n        </div>\n        \n        \n    </div>\n    <!-- END Header -->\n    \n    \n\n    \n        \n    \n\n    <!-- Content -->\n    <div id="content" class="colM">\n        \n        \n        \n\n\n\n\n<div id="content-main">\n\n\n\n<form action="/admin/login/?next=%2Fadmin%2F" method="post" id="login-form"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'waJZti9hxv9jz3xu3kFPMtgXHXP4jcTbzDMsTTyLjGJKTIY5GiNxx6xfH1zT8Sxx\' />\n  <div class="form-row">\n    \n    <label class="required" for="id_username">Username:</label> <input type="text" name="username" autofocus maxlength="254" required id="id_username" />\n  </div>\n  <div class="form-row">\n    \n    <label class="required" for="id_password">Password:</label> <input type="password" name="password" required id="id_password" />\n    <input type="hidden" name="next" value="/admin/" />\n  </div>\n  \n  \n  <div class="submit-row">\n    <label>&nbsp;</label><input type="submit" value="Log in" />\n  </div>\n</form>\n\n</div>\n\n        \n        <br class="clear" />\n    </div>\n    <!-- END Content -->\n\n    <div id="footer"></div>\n</div>\n<!-- END Container -->\n\n</body>\n</html>\n'
+>>> pattern = r"name=\'csrfmiddlewaretoken\' value=\'(.+)\'"
+>>> pattern
+"name=\\'csrfmiddlewaretoken\\' value=\\'(.+)\\'"
+>>> re.match(pattern, login_page_response.text)
+>>> m = re.match(pattern, login_page_response.text)
+>>> m
+>>> m is None
+True
+>>> re.search('Eat\scake', 'Eat cake').group()
+'Eat cake'
+>>> re.search(r'Eat\scake', 'Eat cake').group()
+'Eat cake'
+>>> pattern = 'hakan'
+>>> pattern
+'hakan'
+>>> pattern = '.+<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'.+'
+  File "<stdin>", line 1
+    pattern = '.+<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'.+'
+                                                                                               ^
+SyntaxError: unexpected character after line continuation character
+>>> pattern = ".+<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'.+"
+>>> pattern
+".+<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'.+"
+>>> m = re.match(pattern, login_page_response.text)
+>>> m
+>>> pattern = ".+<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'"
+>>> m = re.match(pattern, login_page_response.text)
+>>> m
+>>> m is None
+True
+>>> login_page_response.content
+b'<!DOCTYPE html>\n\n<html lang="en-us" >\n<head>\n<title>Log in | Django site admin</title>\n<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />\n<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />\n\n\n\n\n<meta name="robots" content="NONE,NOARCHIVE" />\n</head>\n\n\n<body class=" login"\n  data-admin-utc-offset="10800">\n\n<!-- Container -->\n<div id="container">\n\n    \n    <!-- Header -->\n    <div id="header">\n        <div id="branding">\n        \n<h1 id="site-name"><a href="/admin/">Django administration</a></h1>\n\n        </div>\n        \n        \n    </div>\n    <!-- END Header -->\n    \n    \n\n    \n        \n    \n\n    <!-- Content -->\n    <div id="content" class="colM">\n        \n        \n        \n\n\n\n\n<div id="content-main">\n\n\n\n<form action="/admin/login/?next=%2Fadmin%2F" method="post" id="login-form"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'waJZti9hxv9jz3xu3kFPMtgXHXP4jcTbzDMsTTyLjGJKTIY5GiNxx6xfH1zT8Sxx\' />\n  <div class="form-row">\n    \n    <label class="required" for="id_username">Username:</label> <input type="text" name="username" autofocus maxlength="254" required id="id_username" />\n  </div>\n  <div class="form-row">\n    \n    <label class="required" for="id_password">Password:</label> <input type="password" name="password" required id="id_password" />\n    <input type="hidden" name="next" value="/admin/" />\n  </div>\n  \n  \n  <div class="submit-row">\n    <label>&nbsp;</label><input type="submit" value="Log in" />\n  </div>\n</form>\n\n</div>\n\n        \n        <br class="clear" />\n    </div>\n    <!-- END Content -->\n\n    <div id="footer"></div>\n</div>\n<!-- END Container -->\n\n</body>\n</html>\n'
+>>> pattern = "<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'(.+)"
+>>> m = re.match(pattern, login_page_response.text)
+>>> m
+>>> m is None
+True
+>>> pattern = "<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'"
+>>> pattern
+"<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\'"
+>>> re.search(pattern, login_page_response.text)
+<re.Match object; span=(841, 961), match="<input type='hidden' name='csrfmiddlewaretoken' v>
+>>> match = re.search(pattern, login_page_response.text)
+>>> match.group()
+"<input type='hidden' name='csrfmiddlewaretoken' value='waJZti9hxv9jz3xu3kFPMtgXHXP4jcTbzDMsTTyLjGJKTIY5GiNxx6xfH1zT8Sxx'"
+>>> match.group(3)
+'waJZti9hxv9jz3xu3kFPMtgXHXP4jcTbzDMsTTyLjGJKTIY5GiNxx6xfH1zT8Sxx'
+>>> 
+
+
+(venv) (base) hakan@hakan-VirtualBox:~/Python/Robot/python-requests-module-tests$ python
+Python 3.7.4 (default, Aug 13 2019, 20:35:49) 
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import requests, re
+>>> session = requests.Session()
+>>> login_url='https://glacial-earth-31542.herokuapp.com/admin/login/'
+>>> login_params={'next':'/admin/'}
+>>> login_page_get_response = session.get(url=login_url, params=login_params)
+>>> login_page_get_response.status_code
+200
+>>> session.cookies['csrftoken']
+'fmePWcLWA0P1Fj21e1VbGDbCyfOEyVM83heC7cLGs2SZPIqwN6R6zVMxDhiiebLT'
+>>> login_page_get_response.text
+'<!DOCTYPE html>\n\n<html lang="en-us" >\n<head>\n<title>Log in | Django site admin</title>\n<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />\n<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />\n\n\n\n\n<meta name="robots" content="NONE,NOARCHIVE" />\n</head>\n\n\n<body class=" login"\n  data-admin-utc-offset="10800">\n\n<!-- Container -->\n<div id="container">\n\n    \n    <!-- Header -->\n    <div id="header">\n        <div id="branding">\n        \n<h1 id="site-name"><a href="/admin/">Django administration</a></h1>\n\n        </div>\n        \n        \n    </div>\n    <!-- END Header -->\n    \n    \n\n    \n        \n    \n\n    <!-- Content -->\n    <div id="content" class="colM">\n        \n        \n        \n\n\n\n\n<div id="content-main">\n\n\n\n<form action="/admin/login/?next=%2Fadmin%2F" method="post" id="login-form"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'0nxC1hKtxIQqyjpkaoZDaGSu3lyisfkcOixpchKdpKToIINPJtVy3Ytp8n2W8vjX\' />\n  <div class="form-row">\n    \n    <label class="required" for="id_username">Username:</label> <input type="text" name="username" autofocus maxlength="254" required id="id_username" />\n  </div>\n  <div class="form-row">\n    \n    <label class="required" for="id_password">Password:</label> <input type="password" name="password" required id="id_password" />\n    <input type="hidden" name="next" value="/admin/" />\n  </div>\n  \n  \n  <div class="submit-row">\n    <label>&nbsp;</label><input type="submit" value="Log in" />\n  </div>\n</form>\n\n</div>\n\n        \n        <br class="clear" />\n    </div>\n    <!-- END Content -->\n\n    <div id="footer"></div>\n</div>\n<!-- END Container -->\n\n</body>\n</html>\n'
+>>> csrfmiddlewaretoken = '0nxC1hKtxIQqyjpkaoZDaGSu3lyisfkcOixpchKdpKToIINPJtVy3Ytp8n2W8vjX'
+>>> login_form_data = dict(username='hakan', password='h1a2k3a4', csrfmiddlewaretoken=csrfmiddlewaretoken, next='/admin/')
+>>> referer_url='https://glacial-earth-31542.herokuapp.com/admin/login/?next=/admin/'
+>>> login_form_post_response = session.post(url=login_url, data=login_form_data, headers=dict(Referer=referer_url))
+>>> login_form_post_response.status_code
+200
+>>> session.cookies
+<RequestsCookieJar[Cookie(version=0, name='csrftoken', value='UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1617967158, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False), Cookie(version=0, name='sessionid', value='ucgks48ohnmhbtoa3ud4pte22woslm5j', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1587727158, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)]>
+>>> options_response = session.options('https://glacial-earth-31542.herokuapp.com/api/postings/')
+>>> options_response.status_code
+200
+>>> options_response.json()
+{'name': 'Blog Post Api', 'description': '', 'renders': ['application/json', 'text/html'], 'parses': ['application/json', 'application/x-www-form-urlencoded', 'multipart/form-data'], 'actions': {'POST': {'url': {'type': 'field', 'required': False, 'read_only': True, 'label': 'Url'}, 'id': {'type': 'integer', 'required': False, 'read_only': True, 'label': 'ID'}, 'user': {'type': 'field', 'required': False, 'read_only': True, 'label': 'User'}, 'title': {'type': 'string', 'required': False, 'read_only': False, 'label': 'Title', 'max_length': 120}, 'content': {'type': 'string', 'required': False, 'read_only': False, 'label': 'Content', 'max_length': 120}, 'timestamp': {'type': 'datetime', 'required': False, 'read_only': True, 'label': 'Timestamp'}}}}
+>>> session.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+>>> session.headers['Host']='glacial-earth-31542.herokuapp.com'
+>>> session.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Host': 'glacial-earth-31542.herokuapp.com'}
+>>> sessionid in session.cookies
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'sessionid' is not defined
+>>> 'sessionid' in session.cookies
+True
+>>> post_form_get_response = session.get(url='https://glacial-earth-31542.herokuapp.com/api/postings/')
+>>> post_form_get_response.status_code
+200
+>>> post_form_get_response.text
+'[{"url":"https://glacial-earth-31542.herokuapp.com/api/postings/1/","id":1,"user":1,"title":"My First Posting","content":"My First Blog\'s content","timestamp":"2019-12-18T17:06:54.373451+02:00"},{"url":"https://glacial-earth-31542.herokuapp.com/api/postings/2/","id":2,"user":1,"title":"My Second Posting","content":"My Second Posting Content","timestamp":"2019-12-18T17:07:34.938150+02:00"}]'
+>>> post_form_get_response.headers
+{'Connection': 'keep-alive', 'Server': 'gunicorn/20.0.4', 'Date': 'Fri, 10 Apr 2020 12:14:31 GMT', 'Content-Type': 'application/json', 'Vary': 'Accept, Cookie', 'Allow': 'GET, POST, HEAD, OPTIONS', 'X-Frame-Options': 'SAMEORIGIN', 'Content-Length': '392', 'Via': '1.1 vegur'}
+>>> post_form_get_response.cookies
+<RequestsCookieJar[]>
+>>> session.cookies
+<RequestsCookieJar[Cookie(version=0, name='csrftoken', value='UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1617967158, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False), Cookie(version=0, name='sessionid', value='ucgks48ohnmhbtoa3ud4pte22woslm5j', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1587727158, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)]>
+>>> post_form_get_response.json()
+[{'url': 'https://glacial-earth-31542.herokuapp.com/api/postings/1/', 'id': 1, 'user': 1, 'title': 'My First Posting', 'content': "My First Blog's content", 'timestamp': '2019-12-18T17:06:54.373451+02:00'}, {'url': 'https://glacial-earth-31542.herokuapp.com/api/postings/2/', 'id': 2, 'user': 1, 'title': 'My Second Posting', 'content': 'My Second Posting Content', 'timestamp': '2019-12-18T17:07:34.938150+02:00'}]
+>>> headers={'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}
+>>> post_form_get_response = session.get(url='https://glacial-earth-31542.herokuapp.com/api/postings/', headers=headers)
+>>> post_form_get_response.status_code
+200
+>>> post_form_get_response.text
+'\n\n\n\n<!DOCTYPE html>\n<html>\n  <head>\n    \n\n      \n        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n        <meta name="robots" content="NONE,NOARCHIVE" />\n      \n\n      <title>Blog Post Api – Django REST framework</title>\n\n      \n        \n          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap.min.css"/>\n          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap-tweaks.css"/>\n        \n\n        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/prettify.css"/>\n        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/default.css"/>\n        \n      \n\n    \n  </head>\n\n  \n  <body class="">\n\n    <div class="wrapper">\n      \n        <div class="navbar navbar-static-top navbar-inverse"\n             role="navigation" aria-label="navbar">\n          <div class="container">\n            <span>\n              \n                <a class=\'navbar-brand\' rel="nofollow" href=\'https://www.django-rest-framework.org/\'>\n                    Django REST framework\n                </a>\n              \n            </span>\n            <ul class="nav navbar-nav pull-right">\n              \n                \n                  <li class="navbar-text">hakan</li>\n                \n              \n            </ul>\n          </div>\n        </div>\n      \n\n      <div class="container">\n        \n          <ul class="breadcrumb">\n            \n              \n                <li class="active"><a href="/api/postings/">Blog Post Api</a></li>\n              \n            \n          </ul>\n        \n\n        <!-- Content -->\n        <div id="content" role="main" aria-label="content">\n          \n\n          <div class="region"  aria-label="request form">\n          \n          \n          \n            <form id="get-form" class="pull-right">\n              <fieldset>\n                \n                  <div class="btn-group format-selection">\n                    <a class="btn btn-primary js-tooltip" href="/api/postings/" rel="nofollow" title="Make a GET request on the Blog Post Api resource">GET</a>\n\n                    <button class="btn btn-primary dropdown-toggle js-tooltip" data-toggle="dropdown" title="Specify a format for the GET request">\n                      <span class="caret"></span>\n                    </button>\n                    <ul class="dropdown-menu">\n                      \n                        <li>\n                          <a class="js-tooltip format-option" href="/api/postings/?format=json" rel="nofollow" title="Make a GET request on the Blog Post Api resource with the format set to `json`">json</a>\n                        </li>\n                      \n                        <li>\n                          <a class="js-tooltip format-option" href="/api/postings/?format=api" rel="nofollow" title="Make a GET request on the Blog Post Api resource with the format set to `api`">api</a>\n                        </li>\n                      \n                    </ul>\n                  </div>\n                \n              </fieldset>\n            </form>\n          \n\n          \n            <form class="button-form" action="/api/postings/" data-method="OPTIONS">\n              <button class="btn btn-primary js-tooltip" title="Make an OPTIONS request on the Blog Post Api resource">OPTIONS</button>\n            </form>\n          \n\n          \n\n          \n\n          \n\n          \n          </div>\n\n            <div class="content-main" role="main"  aria-label="main content">\n              <div class="page-header">\n                <h1>Blog Post Api</h1>\n              </div>\n              <div style="float:left">\n                \n                  <p></p>\n                \n              </div>\n\n              \n\n              <div class="request-info" style="clear: both" aria-label="request info">\n                <pre class="prettyprint"><b>GET</b> /api/postings/</pre>\n              </div>\n\n              <div class="response-info" aria-label="response info">\n                <pre class="prettyprint"><span class="meta nocode"><b>HTTP 200 OK</b>\n<b>Allow:</b> <span class="lit">GET, POST, HEAD, OPTIONS</span>\n<b>Content-Type:</b> <span class="lit">application/json</span>\n<b>Vary:</b> <span class="lit">Accept</span>\n\n</span>[\n    {\n        &quot;url&quot;: &quot;<a href="https://glacial-earth-31542.herokuapp.com/api/postings/1/" rel="nofollow">https://glacial-earth-31542.herokuapp.com/api/postings/1/</a>&quot;,\n        &quot;id&quot;: 1,\n        &quot;user&quot;: 1,\n        &quot;title&quot;: &quot;My First Posting&quot;,\n        &quot;content&quot;: &quot;My First Blog&#39;s content&quot;,\n        &quot;timestamp&quot;: &quot;2019-12-18T17:06:54.373451+02:00&quot;\n    },\n    {\n        &quot;url&quot;: &quot;<a href="https://glacial-earth-31542.herokuapp.com/api/postings/2/" rel="nofollow">https://glacial-earth-31542.herokuapp.com/api/postings/2/</a>&quot;,\n        &quot;id&quot;: 2,\n        &quot;user&quot;: 1,\n        &quot;title&quot;: &quot;My Second Posting&quot;,\n        &quot;content&quot;: &quot;My Second Posting Content&quot;,\n        &quot;timestamp&quot;: &quot;2019-12-18T17:07:34.938150+02:00&quot;\n    }\n]</pre>\n              </div>\n            </div>\n\n            \n              \n                <div class="tabbable">\n                  \n                    <ul class="nav nav-tabs form-switcher">\n                      <li>\n                        <a name=\'html-tab\' href="#post-object-form" data-toggle="tab">HTML form</a>\n                      </li>\n                      <li>\n                        <a name=\'raw-tab\' href="#post-generic-content-form" data-toggle="tab">Raw data</a>\n                      </li>\n                    </ul>\n                  \n\n                  <div class="well tab-content">\n                    \n                      <div class="tab-pane" id="post-object-form">\n                        \n                          <form action="/api/postings/" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>\n                            <fieldset>\n                              <input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo\' />\n                              \n\n  \n\n  \n\n  \n\n  \n    <div class="form-group ">\n  \n    <label class="col-sm-2 control-label ">\n      Title\n    </label>\n  \n\n  <div class="col-sm-10">\n    <input name="title" class="form-control" type="text"  value="" >\n\n    \n\n    \n  </div>\n</div>\n\n  \n\n  \n    <div class="form-group ">\n  \n    <label class="col-sm-2 control-label ">\n      Content\n    </label>\n  \n\n  <div class="col-sm-10">\n    <textarea name="content" class="form-control"  ></textarea>\n\n    \n\n    \n  </div>\n</div>\n\n  \n\n  \n\n\n                              <div class="form-actions">\n                                <button class="btn btn-primary js-tooltip" title="Make a POST request on the Blog Post Api resource">POST</button>\n                              </div>\n                            </fieldset>\n                          </form>\n                        \n                      </div>\n                    \n\n                    <div class="tab-pane" id="post-generic-content-form">\n                      \n                        <form action="/api/postings/" method="POST" class="form-horizontal">\n                          <fieldset>\n                            \n\n\n  <div class="form-group">\n    <label for="id__content_type" class="col-sm-2 control-label">Media type:</label>\n    <div class="col-sm-10">\n      <select name="_content_type" data-override="content-type" id="id__content_type" class="form-control">\n  <option value="application/json" selected>application/json</option>\n\n  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>\n\n  <option value="multipart/form-data">multipart/form-data</option>\n\n</select>\n      <span class="help-block"></span>\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="id__content" class="col-sm-2 control-label">Content:</label>\n    <div class="col-sm-10">\n      <textarea name="_content" cols="40" rows="10" data-override="content" id="id__content" class="form-control">\n{\n    &quot;title&quot;: &quot;&quot;,\n    &quot;content&quot;: &quot;&quot;\n}</textarea>\n      <span class="help-block"></span>\n    </div>\n  </div>\n\n\n                            <div class="form-actions">\n                              <button class="btn btn-primary js-tooltip" title="Make a POST request on the Blog Post Api resource">POST</button>\n                            </div>\n                          </fieldset>\n                        </form>\n                      \n                    </div>\n                  </div>\n                </div>\n              \n\n              \n            \n          \n        </div><!-- /.content -->\n      </div><!-- /.container -->\n    </div><!-- ./wrapper -->\n\n    \n\n    \n      <script>\n        window.drf = {\n          csrfHeaderName: "X-CSRFTOKEN",\n          csrfToken: "qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo"\n        };\n      </script>\n      <script src="/static/rest_framework/js/jquery-3.4.1.min.js"></script>\n      <script src="/static/rest_framework/js/ajax-form.js"></script>\n      <script src="/static/rest_framework/js/csrf.js"></script>\n      <script src="/static/rest_framework/js/bootstrap.min.js"></script>\n      <script src="/static/rest_framework/js/prettify-min.js"></script>\n      <script src="/static/rest_framework/js/default.js"></script>\n      <script>\n        $(document).ready(function() {\n          $(\'form\').ajaxForm();\n        });\n      </script>\n    \n\n  </body>\n  \n</html>\n'
+>>> session.cookies
+<RequestsCookieJar[Cookie(version=0, name='csrftoken', value='UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1617970946, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False), Cookie(version=0, name='sessionid', value='ucgks48ohnmhbtoa3ud4pte22woslm5j', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1587727158, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)]>
+>>> posting_form_data = {'title'='agu', 'content'='ggg', 'csrfmiddlewaretoken'='qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo'}
+  File "<stdin>", line 1
+    posting_form_data = {'title'='agu', 'content'='ggg', 'csrfmiddlewaretoken'='qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo'}
+                                ^
+SyntaxError: invalid syntax
+>>> posting_form_data = dict('title'='agu', 'content'='ggg', 'csrfmiddlewaretoken'='qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo')
+  File "<stdin>", line 1
+SyntaxError: keyword can't be an expression
+>>> posting_form_data = {'title':'agu', 'content':'ggg', 'csrfmiddlewaretoken':'qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo'}
+>>> create_posting_response = session.post(url='https://glacial-earth-31542.herokuapp.com/api/postings/', data=posting_form_data)
+>>> create_posting_response.status_code
+403
+>>> session.cookies
+<RequestsCookieJar[Cookie(version=0, name='csrftoken', value='UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1617970946, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False), Cookie(version=0, name='sessionid', value='ucgks48ohnmhbtoa3ud4pte22woslm5j', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1587727158, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)]>
+>>> create_posting_response.request
+<PreparedRequest [POST]>
+>>> create_posting_response.request.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Host': 'glacial-earth-31542.herokuapp.com', 'Cookie': 'csrftoken=UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc; sessionid=ucgks48ohnmhbtoa3ud4pte22woslm5j', 'Content-Length': '106', 'Content-Type': 'application/x-www-form-urlencoded'}
+>>> posting_as_json = {title: "dog", content: "wuf"}
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'title' is not defined
+>>> posting_as_json = {'title': "dog", 'content': "wuf"}
+>>> session.headers['X-CSRFTOKEN']='qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo'
+>>> session.headers['X-Requested-With']='XMLHttpRequest'
+>>> create_posting_response = session.post(url='https://glacial-earth-31542.herokuapp.com/api/postings/', json=posting_as_json)
+>>> create_posting_response.status_code
+403
+>>> create_posting_response.request.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Host': 'glacial-earth-31542.herokuapp.com', 'X-CSRFTOKEN': 'qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo', 'X-Requested-With': 'XMLHttpRequest', 'Cookie': 'csrftoken=UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc; sessionid=ucgks48ohnmhbtoa3ud4pte22woslm5j', 'Content-Length': '34', 'Content-Type': 'application/json'}
+>>> session.headers['Origin']='https://glacial-earth-31542.herokuapp.com'
+>>> create_posting_response = session.post(url='https://glacial-earth-31542.herokuapp.com/api/postings/', json=posting_as_json)
+>>> create_posting_response.status_code
+403
+>>> create_posting_response.request.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Host': 'glacial-earth-31542.herokuapp.com', 'X-CSRFTOKEN': 'qbM4spSfHEaYKlYh11rPjW4DNJLz4PuTY4EqoluIGINbgshimCKO5xitjTB5gzfo', 'X-Requested-With': 'XMLHttpRequest', 'Origin': 'https://glacial-earth-31542.herokuapp.com', 'Cookie': 'csrftoken=UuwtWkAFbBikarw6usjlBkNkyC6kBZSHsnoPSgc8aFVxGyP7P3CknV1a4MWQNJDc; sessionid=ucgks48ohnmhbtoa3ud4pte22woslm5j', 'Content-Length': '34', 'Content-Type': 'application/json'}
+>>> session.headers['Sec-Fetch-Dest']='empty'
+>>> create_posting_response = session.post(url='https://glacial-earth-31542.herokuapp.com/api/postings/', json=posting_as_json)
+>>> create_posting_response.status_code
+403
+>>> session.headers['Sec-Fetch-Site']='same-origin'
+>>> session.headers['Sec-Fetch-Mode']='cors'
+>>> session.headers['Referer']='https://glacial-earth-31542.herokuapp.com/api/postings/'
+>>> create_posting_response = session.post(url='https://glacial-earth-31542.herokuapp.com/api/postings/', json=posting_as_json)
+>>> create_posting_response.status_code
+201
+>>> 
+>>> 
+
+
+
+>>> overwriting_get_headers = {'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}
+>>> ultimate_get_headers = ChainMap(overwriting_get_headers, GET_REQUEST_HEADERS)
+
+
+
+
+<input type="hidden" name="csrfmiddlewaretoken" value="w40p7aHNkXL3x9yzSJk8xc0lSK7YpygzKaKtGyuvBRxH9u0oFANu5EpYEQx9gS89">
+Cookie: csrftoken=LjRwEZ5bTTjDVxaMYFVvUudGFYFRWhTJZpBAdnSTaN5hxSCBLwoRsWCjr452NBLj; sessionid=j4c9bg4bqzpctu84djqfm8awvfm1hv6w; tabstyle=html-tab
+
+
+
+
+
+
+

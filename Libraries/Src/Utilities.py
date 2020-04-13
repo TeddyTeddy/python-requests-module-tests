@@ -13,6 +13,18 @@ def validate_url(url):
     except ValueError:
         assert False
 
+def get_csrfmiddlewaretoken(response_text):
+    pattern = "<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\' "
+    match = re.search(pattern, response_text)
+    if match and len(match.groups()) == 3:  # bingo! a match with the pattern found
+        return match.groups()[2]
+
+    pattern = 'csrfToken: "(.+)"\\n'
+    match = re.search(pattern, response_text)
+    if match and len(match.groups()) == 1:  # bingo! a match with the pattern found
+        return match.groups()[0]
+
+    return None
 
 def get_uri(url):
     # url is for ex: 'https://glacial-earth-31542.herokuapp.com/api/postings/11/'

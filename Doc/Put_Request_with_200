@@ -1,0 +1,175 @@
+(venv) (base) hakan@hakan-VirtualBox:~/Python/Robot/python-requests-module-tests$ python
+Python 3.7.4 (default, Aug 13 2019, 20:35:49) 
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import requests, re
+>>> session = requests.Session()
+>>> login_url='https://glacial-earth-31542.herokuapp.com/admin/login/'
+>>> login_params={'next':'/admin/'}
+>>> login_page_get_response = session.get(url=login_url, params=login_params)
+>>> login_page_get_response.status_text
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'Response' object has no attribute 'status_text'
+>>> login_page_get_response.status_code
+200
+>>> session.cookies['csrftoken']
+'sK80PGNtxGO3TDV1U4TXu3Wl0WFz3DqNzcyWmXeEXR5q7TCPkSCFPpA3tZ47YVSp'
+>>> session.cookies
+<RequestsCookieJar[Cookie(version=0, name='csrftoken', value='sK80PGNtxGO3TDV1U4TXu3Wl0WFz3DqNzcyWmXeEXR5q7TCPkSCFPpA3tZ47YVSp', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1618211701, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False)]>
+>>> login_page_get_response.text
+'<!DOCTYPE html>\n\n<html lang="en-us" >\n<head>\n<title>Log in | Django site admin</title>\n<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />\n<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />\n\n\n\n\n<meta name="robots" content="NONE,NOARCHIVE" />\n</head>\n\n\n<body class=" login"\n  data-admin-utc-offset="10800">\n\n<!-- Container -->\n<div id="container">\n\n    \n    <!-- Header -->\n    <div id="header">\n        <div id="branding">\n        \n<h1 id="site-name"><a href="/admin/">Django administration</a></h1>\n\n        </div>\n        \n        \n    </div>\n    <!-- END Header -->\n    \n    \n\n    \n        \n    \n\n    <!-- Content -->\n    <div id="content" class="colM">\n        \n        \n        \n\n\n\n\n<div id="content-main">\n\n\n\n<form action="/admin/login/?next=%2Fadmin%2F" method="post" id="login-form"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'8EVIRyC9EpFeqT0oeVRsg4qwXJ8XOD3Tf6lEoP3k4AWBE9HcEJAaBq4eqMxvJVvv\' />\n  <div class="form-row">\n    \n    <label class="required" for="id_username">Username:</label> <input type="text" name="username" autofocus maxlength="254" required id="id_username" />\n  </div>\n  <div class="form-row">\n    \n    <label class="required" for="id_password">Password:</label> <input type="password" name="password" required id="id_password" />\n    <input type="hidden" name="next" value="/admin/" />\n  </div>\n  \n  \n  <div class="submit-row">\n    <label>&nbsp;</label><input type="submit" value="Log in" />\n  </div>\n</form>\n\n</div>\n\n        \n        <br class="clear" />\n    </div>\n    <!-- END Content -->\n\n    <div id="footer"></div>\n</div>\n<!-- END Container -->\n\n</body>\n</html>\n'
+>>> csrfmiddlewaretoken = '8EVIRyC9EpFeqT0oeVRsg4qwXJ8XOD3Tf6lEoP3k4AWBE9HcEJAaBq4eqMxvJVvv'
+>>> login_form_data = dict(username='hakan', password='h1a2k3a4', csrfmiddlewaretoken=csrfmiddlewaretoken, next='/admin/')
+>>> referer_url='https://glacial-earth-31542.herokuapp.com/admin/login/?next=/admin/'
+>>> login_form_post_response = session.post(url=login_url, data=login_form_data, headers=dict(Referer=referer_url))
+>>> login_form_post_response.status_code
+200
+>>> session.cookies
+<RequestsCookieJar[Cookie(version=0, name='csrftoken', value='ormBsczvjL4lXlV5YOgmUSJrO6ZjZi4FT3ZcDbkCX2dVEWEzT8Z4IedooFSjxZir', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1618212067, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False), Cookie(version=0, name='sessionid', value='d4voe1qy59j13pq56i5b3nnxfo1hqs8p', port=None, port_specified=False, domain='glacial-earth-31542.herokuapp.com', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=1587972067, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)]>
+>>> 
+>>> 
+>>> GET_REQUEST_HEADERS = {
+...   'Host': 'glacial-earth-31542.herokuapp.com',
+...   'Connection': 'keep-alive',
+...   'Cache-Control': 'max-age=0',
+...   'Upgrade-Insecure-Requests': '1',
+...   'Sec-Fetch-Dest': 'document',
+...   'Accept': 'application/json',  # ACCEPT_APPLICATION_JSON_HEADER / ACCEPT_TEXT_HTML_HEADER
+...   'Sec-Fetch-Site': 'same-origin',
+...   'Sec-Fetch-Mode': 'navigate',
+...   'Sec-Fetch-User': '?1',
+...   'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
+...   'Accept-Encoding': 'gzip, deflate, br',
+...   'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
+... }
+>>> 
+>>> 
+>>> from collections import ChainMap
+>>> overwriting_get_headers = {'ACCEPT_TEXT_HTML_HEADER' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}
+>>> ultimate_get_headers = ChainMap(overwriting_get_headers, GET_REQUEST_HEADERS)
+>>> 
+>>> request_url = 'https://glacial-earth-31542.herokuapp.com/api/postings/2343/'
+>>> update_posting_form_get_response = session.get(url=request_url, headers=ultimate_get_headers) 
+>>> update_posting_form_get_response.status_code
+200
+>>> 
+>>> update_posting_form_get_response.text
+'{"url":"https://glacial-earth-31542.herokuapp.com/api/postings/2343/","id":2343,"user":1,"title":"darthwader","content":"xxx","timestamp":"2020-04-12T13:08:04.707034+03:00"}'
+>>> overwriting_get_headers = {'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}
+>>> ultimate_get_headers = ChainMap(overwriting_get_headers, GET_REQUEST_HEADERS)
+>>> update_posting_form_get_response = session.get(url=request_url, headers=ultimate_get_headers)
+>>> 
+>>> update_posting_form_get_response.status_code
+200
+>>> update_posting_form_get_response.text
+'\n\n\n\n<!DOCTYPE html>\n<html>\n  <head>\n    \n\n      \n        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n        <meta name="robots" content="NONE,NOARCHIVE" />\n      \n\n      <title>Blog Post Rud – Django REST framework</title>\n\n      \n        \n          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap.min.css"/>\n          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap-tweaks.css"/>\n        \n\n        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/prettify.css"/>\n        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/default.css"/>\n        \n      \n\n    \n  </head>\n\n  \n  <body class="">\n\n    <div class="wrapper">\n      \n        <div class="navbar navbar-static-top navbar-inverse"\n             role="navigation" aria-label="navbar">\n          <div class="container">\n            <span>\n              \n                <a class=\'navbar-brand\' rel="nofollow" href=\'https://www.django-rest-framework.org/\'>\n                    Django REST framework\n                </a>\n              \n            </span>\n            <ul class="nav navbar-nav pull-right">\n              \n                \n                  <li class="navbar-text">hakan</li>\n                \n              \n            </ul>\n          </div>\n        </div>\n      \n\n      <div class="container">\n        \n          <ul class="breadcrumb">\n            \n              \n                <li><a href="/api/postings/">Blog Post Api</a></li>\n              \n            \n              \n                <li class="active"><a href="/api/postings/2343/">Blog Post Rud</a></li>\n              \n            \n          </ul>\n        \n\n        <!-- Content -->\n        <div id="content" role="main" aria-label="content">\n          \n\n          <div class="region"  aria-label="request form">\n          \n          \n          \n            <form id="get-form" class="pull-right">\n              <fieldset>\n                \n                  <div class="btn-group format-selection">\n                    <a class="btn btn-primary js-tooltip" href="/api/postings/2343/" rel="nofollow" title="Make a GET request on the Blog Post Rud resource">GET</a>\n\n                    <button class="btn btn-primary dropdown-toggle js-tooltip" data-toggle="dropdown" title="Specify a format for the GET request">\n                      <span class="caret"></span>\n                    </button>\n                    <ul class="dropdown-menu">\n                      \n                        <li>\n                          <a class="js-tooltip format-option" href="/api/postings/2343/?format=json" rel="nofollow" title="Make a GET request on the Blog Post Rud resource with the format set to `json`">json</a>\n                        </li>\n                      \n                        <li>\n                          <a class="js-tooltip format-option" href="/api/postings/2343/?format=api" rel="nofollow" title="Make a GET request on the Blog Post Rud resource with the format set to `api`">api</a>\n                        </li>\n                      \n                    </ul>\n                  </div>\n                \n              </fieldset>\n            </form>\n          \n\n          \n            <form class="button-form" action="/api/postings/2343/" data-method="OPTIONS">\n              <button class="btn btn-primary js-tooltip" title="Make an OPTIONS request on the Blog Post Rud resource">OPTIONS</button>\n            </form>\n          \n\n          \n            <button class="btn btn-danger button-form js-tooltip" title="Make a DELETE request on the Blog Post Rud resource" data-toggle="modal" data-target="#deleteModal">DELETE</button>\n\n            <!-- Delete Modal -->\n            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">\n              <div class="modal-dialog">\n                <div class="modal-content">\n                  <div class="modal-body">\n                    <h4 class="text-center">Are you sure you want to delete this Blog Post Rud?</h4>\n                  </div>\n                  <div class="modal-footer">\n                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>\n                    <form class="button-form" action="/api/postings/2343/" data-method="DELETE">\n                      <button class="btn btn-danger">Delete</button>\n                    </form>\n                  </div>\n                </div>\n              </div>\n            </div>\n          \n\n          \n\n          \n\n          \n          </div>\n\n            <div class="content-main" role="main"  aria-label="main content">\n              <div class="page-header">\n                <h1>Blog Post Rud</h1>\n              </div>\n              <div style="float:left">\n                \n                  <p></p>\n                \n              </div>\n\n              \n\n              <div class="request-info" style="clear: both" aria-label="request info">\n                <pre class="prettyprint"><b>GET</b> /api/postings/2343/</pre>\n              </div>\n\n              <div class="response-info" aria-label="response info">\n                <pre class="prettyprint"><span class="meta nocode"><b>HTTP 200 OK</b>\n<b>Allow:</b> <span class="lit">GET, PUT, PATCH, DELETE, HEAD, OPTIONS</span>\n<b>Content-Type:</b> <span class="lit">application/json</span>\n<b>Vary:</b> <span class="lit">Accept</span>\n\n</span>{\n    &quot;url&quot;: &quot;<a href="https://glacial-earth-31542.herokuapp.com/api/postings/2343/" rel="nofollow">https://glacial-earth-31542.herokuapp.com/api/postings/2343/</a>&quot;,\n    &quot;id&quot;: 2343,\n    &quot;user&quot;: 1,\n    &quot;title&quot;: &quot;darthwader&quot;,\n    &quot;content&quot;: &quot;xxx&quot;,\n    &quot;timestamp&quot;: &quot;2020-04-12T13:08:04.707034+03:00&quot;\n}</pre>\n              </div>\n            </div>\n\n            \n              \n\n              \n                <div class="tabbable">\n                  \n                    <ul class="nav nav-tabs form-switcher">\n                      <li>\n                        <a name=\'html-tab\' href="#put-object-form" data-toggle="tab">HTML form</a>\n                      </li>\n                      <li>\n                        <a  name=\'raw-tab\' href="#put-generic-content-form" data-toggle="tab">Raw data</a>\n                      </li>\n                    </ul>\n                  \n\n                  <div class="well tab-content">\n                    \n                      <div class="tab-pane" id="put-object-form">\n                        <form action="/api/postings/2343/" data-method="PUT" enctype="multipart/form-data" class="form-horizontal" novalidate>\n                          <fieldset>\n                            \n\n  \n\n  \n\n  \n\n  \n    <div class="form-group ">\n  \n    <label class="col-sm-2 control-label ">\n      Title\n    </label>\n  \n\n  <div class="col-sm-10">\n    <input name="title" class="form-control" type="text"  value="darthwader" >\n\n    \n\n    \n  </div>\n</div>\n\n  \n\n  \n    <div class="form-group ">\n  \n    <label class="col-sm-2 control-label ">\n      Content\n    </label>\n  \n\n  <div class="col-sm-10">\n    <textarea name="content" class="form-control"  >xxx</textarea>\n\n    \n\n    \n  </div>\n</div>\n\n  \n\n  \n\n\n                            <div class="form-actions">\n                              <button class="btn btn-primary js-tooltip" title="Make a PUT request on the Blog Post Rud resource">PUT</button>\n                            </div>\n                          </fieldset>\n                        </form>\n                      </div>\n                    \n\n                    <div class="tab-pane" id="put-generic-content-form">\n                      \n                        <form action="/api/postings/2343/" data-method="PUT" class="form-horizontal">\n                          <fieldset>\n                            \n\n\n  <div class="form-group">\n    <label for="id__content_type" class="col-sm-2 control-label">Media type:</label>\n    <div class="col-sm-10">\n      <select name="_content_type" data-override="content-type" id="id__content_type" class="form-control">\n  <option value="application/json" selected>application/json</option>\n\n  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>\n\n  <option value="multipart/form-data">multipart/form-data</option>\n\n</select>\n      <span class="help-block"></span>\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="id__content" class="col-sm-2 control-label">Content:</label>\n    <div class="col-sm-10">\n      <textarea name="_content" cols="40" rows="10" data-override="content" id="id__content" class="form-control">\n{\n    &quot;url&quot;: &quot;https://glacial-earth-31542.herokuapp.com/api/postings/2343/&quot;,\n    &quot;id&quot;: 2343,\n    &quot;user&quot;: 1,\n    &quot;title&quot;: &quot;darthwader&quot;,\n    &quot;content&quot;: &quot;xxx&quot;,\n    &quot;timestamp&quot;: &quot;2020-04-12T13:08:04.707034+03:00&quot;\n}</textarea>\n      <span class="help-block"></span>\n    </div>\n  </div>\n\n\n                            <div class="form-actions">\n                              \n                                <button class="btn btn-primary js-tooltip" title="Make a PUT request on the Blog Post Rud resource">PUT</button>\n                              \n                              \n                              <button data-method="PATCH" class="btn btn-primary js-tooltip" title="Make a PATCH request on the Blog Post Rud resource">PATCH</button>\n                                \n                            </div>\n                          </fieldset>\n                        </form>\n                      \n                    </div>\n                  </div>\n                </div>\n              \n            \n          \n        </div><!-- /.content -->\n      </div><!-- /.container -->\n    </div><!-- ./wrapper -->\n\n    \n\n    \n      <script>\n        window.drf = {\n          csrfHeaderName: "X-CSRFTOKEN",\n          csrfToken: "wFLM3MC8eRYdKWVrexOkRKpawhMIIcrn1honeLnfS87NrxEV9Rx2F6T76QFIgTF9"\n        };\n      </script>\n      <script src="/static/rest_framework/js/jquery-3.4.1.min.js"></script>\n      <script src="/static/rest_framework/js/ajax-form.js"></script>\n      <script src="/static/rest_framework/js/csrf.js"></script>\n      <script src="/static/rest_framework/js/bootstrap.min.js"></script>\n      <script src="/static/rest_framework/js/prettify-min.js"></script>\n      <script src="/static/rest_framework/js/default.js"></script>\n      <script>\n        $(document).ready(function() {\n          $(\'form\').ajaxForm();\n        });\n      </script>\n    \n\n  </body>\n  \n</html>\n'
+>>> 
+>>> 
+>>> 
+>>> csrfmiddlewaretoken = 'wFLM3MC8eRYdKWVrexOkRKpawhMIIcrn1honeLnfS87NrxEV9Rx2F6T76QFIgTF9'
+>>> 
+>>> 
+>>> updated_posting = {
+...     "url": "https://glacial-earth-31542.herokuapp.com/api/postings/2343/",
+...     "id": 2343,
+...     "user": 1,
+...     "title": "sisi",
+...     "content": "xxx",
+...     "timestamp": "2020-04-12T13:08:04.707034+03:00"
+... }
+>>> 
+>>> 
+>>> update_posting_response = sessions.put(url=updated_posting['url'], data=updated_posting)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'sessions' is not defined
+>>> update_posting_response = session.put(url=updated_posting['url'], data=updated_posting)
+>>> 
+>>> update_posting_response.status_code
+403
+>>> 
+>>> update_posting_response.text
+'{"detail":"CSRF Failed: Referer checking failed - no Referer."}'
+>>> 
+>>> 
+>>> #### This is where 403 stops
+... 
+>>> 
+>>> PUT_REQUEST_HEADERS = {
+...   'Host': 'glacial-earth-31542.herokuapp.com',
+...   'Connection': 'keep-alive',
+...   'Origin': 'https://glacial-earth-31542.herokuapp.com',
+...   'Content-Type': 'application/json',
+...   'Accept': 'text/html; q=1.0, */*',
+...   'Sec-Fetch-Dest': 'empty',
+...   'X-Requested-With': 'XMLHttpRequest',
+...   'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
+...   'Sec-Fetch-Site': 'same-origin',
+...   'Sec-Fetch-Mode': 'cors',
+...   'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
+...   'Accept-Encoding': 'gzip, deflate, br',
+...   'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
+... }
+>>> 
+>>> overwriting_put_request_headers = {'X-CSRFTOKEN':csrfmiddlewaretoken, 'Referer':updated_posting['url'] }
+>>> ultimate_put_request_headers = ChainMap(overwriting_put_request_headers, PUT_REQUEST_HEADERS)
+>>> 
+>>> update_posting_response = session.put(url=updated_posting['url'], data=updated_posting, headers=ultimate_put_request_headers)
+>>> update_posting_response.status_code
+400
+>>> update_posting_response = session.put(url=updated_posting['url'], data=updated_posting, headers=overwriting_put_request_headers)
+>>> update_posting_response.status_code
+200
+>>> 
+>>> #### PUT with 200 finishes here
+
+>>> PUT_REQUEST_HEADERS = {
+...   'Host': 'glacial-earth-31542.herokuapp.com',
+...   'Connection': 'keep-alive',
+...   'Origin': 'https://glacial-earth-31542.herokuapp.com',
+...   'Accept': 'text/html; q=1.0, */*',
+...   'Sec-Fetch-Dest': 'empty',
+...   'X-Requested-With': 'XMLHttpRequest',
+...   'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
+...   'Sec-Fetch-Site': 'same-origin',
+...   'Sec-Fetch-Mode': 'cors',
+...   'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
+...   'Accept-Encoding': 'gzip, deflate, br',
+...   'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
+... }
+>>> 
+>>> ultimate_put_request_headers = ChainMap(overwriting_put_request_headers, PUT_REQUEST_HEADERS)
+>>> update_posting_response = session.put(url=updated_posting['url'], data=updated_posting, headers=ultimate_put_request_headers)
+>>> update_posting_response.status_code
+200
+>>> update_posting_response.request.headers
+{'User-Agent': 'python-requests/2.23.0', 'Accept-Encoding': 'gzip, deflate, br', 'Accept': 'text/html; q=1.0, */*', 'Connection': 'keep-alive', 'Host': 'glacial-earth-31542.herokuapp.com', 'Origin': 'https://glacial-earth-31542.herokuapp.com', 'Sec-Fetch-Dest': 'empty', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFTOKEN': 'wFLM3MC8eRYdKWVrexOkRKpawhMIIcrn1honeLnfS87NrxEV9Rx2F6T76QFIgTF9', 'Sec-Fetch-Site': 'same-origin', 'Sec-Fetch-Mode': 'cors', 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/2343/', 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8', 'Cookie': 'csrftoken=ormBsczvjL4lXlV5YOgmUSJrO6ZjZi4FT3ZcDbkCX2dVEWEzT8Z4IedooFSjxZir; sessionid=d4voe1qy59j13pq56i5b3nnxfo1hqs8p', 'Content-Length': '167', 'Content-Type': 'application/x-www-form-urlencoded'}
+>>> 
+>>> 
+>>> ### PUT with 200 ends
+... 
+>>> 
+>>> PUT_REQUEST_HEADERS = {
+...   'Host': 'glacial-earth-31542.herokuapp.com',
+...   'Connection': 'keep-alive',
+...   'Origin': 'https://glacial-earth-31542.herokuapp.com',
+...   'Content-Type': 'application/json',
+...   'Accept': 'text/html; q=1.0, */*',
+...   'Sec-Fetch-Dest': 'empty',
+...   'X-Requested-With': 'XMLHttpRequest',
+...   'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
+...   'Sec-Fetch-Site': 'same-origin',
+...   'Sec-Fetch-Mode': 'cors',
+...   'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
+...   'Accept-Encoding': 'gzip, deflate, br',
+...   'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
+... }
+>>> 
+>>> ultimate_put_request_headers = ChainMap(overwriting_put_request_headers, PUT_REQUEST_HEADERS)
+>>> 
+>>> update_posting_response = session.put(url=updated_posting['url'], json=updated_posting, headers=ultimate_put_request_headers)
+>>> update_posting_response.status_code
+200
+
+

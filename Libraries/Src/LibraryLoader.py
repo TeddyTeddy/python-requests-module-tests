@@ -20,15 +20,6 @@ class LibraryLoader:
             LibraryLoader()
         return LibraryLoader.__instance
 
-    @property
-    def rl(self):   # rl stands for 'request library'
-        if self._request_library is None:
-            try:
-                self._request_library = BuiltIn().get_library_instance('RequestsLibrary')
-            except RuntimeError:
-                self._request_library = None
-        return self._request_library
-
 
 if __name__ == '__main__':
     ll = LibraryLoader.get_instance()

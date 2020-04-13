@@ -2,17 +2,21 @@ def get_variables():
     variables = {
         'ADMIN_SESSION': 'Admin Session',
         'API_BASE_URL': 'https://glacial-earth-31542.herokuapp.com',
+        'ADMIN_LOGIN_URI': '/admin/login/',
+        'ACCEPT_APPLICATION_JSON_HEADER' : 'application/json',
+        'ACCEPT_TEXT_HTML_HEADER' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'ADMIN_LOGIN_QUERY_PARAMS': {'next':'/admin/'},
+        'CONTENT_TYPE_IS_FORM_HEADER': 'application/x-www-form-urlencoded',
         'ADMIN': {
+			'USERNAME': 'hakan',
+			'PASSWORD': 'h1a2k3a4',
             'OPTIONS_REQUEST_HEADERS': {
-                'Cookie': 'tabstyle=raw-tab; csrftoken=YZOeA3UsxKOCmIhaBPWP4o0Od2rBtkqo3cHCvcJpk45790iM37RHxbweEw7qWZ51; sessionid=rpibesdbd7s6wbwxwrriqi8seg2lsi7w',
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
                 'Accept': 'application/json',
-                # Note: this is different from what browser sends to server. Refer to OPTIONS_RESPONSE_HEADERS['content-type']
-                'Origin': 'https://glacial-earth-31542.herokuapp.com',
+				'Origin': 'https://glacial-earth-31542.herokuapp.com',
                 'X-Requested-With': 'XMLHttpRequest',
                 'Sec-Fetch-Dest': 'empty',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'cors',
@@ -21,14 +25,12 @@ def get_variables():
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
             },
             'GET_REQUEST_HEADERS': {
-                'Cookie': 'tabstyle=raw-tab; csrftoken=YZOeA3UsxKOCmIhaBPWP4o0Od2rBtkqo3cHCvcJpk45790iM37RHxbweEw7qWZ51; sessionid=rpibesdbd7s6wbwxwrriqi8seg2lsi7w',
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
                 'Cache-Control': 'max-age=0',
                 'Upgrade-Insecure-Requests': '1',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Sec-Fetch-Dest': 'document',
-                'Accept': 'application/json',  # Note: this is different from what browser sends to server.
+                'Accept': 'application/json',  # can be overwritten by ACCEPT_TEXT_HTML_HEADER in ChainMap implementation
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'navigate',
                 'Sec-Fetch-User': '?1',
@@ -39,55 +41,47 @@ def get_variables():
             'POST_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
-                 # Content-Length: 64
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', # default value for creating a posting, can be overwritten by CONTENT_TYPE_IS_FORM_HEADER in ChainMap implementation
                 'Accept': 'text/html; q=1.0, */*',
                 'Sec-Fetch-Dest': 'empty',
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFTOKEN': '795vLL03vWakjyWxM3odA8Fs2OFy1J8VcmYTGUP0igrP6QX9elj53VbStilnuoNy',
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'cors',
                 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
-                'Cookie': 'tabstyle=raw-tab; csrftoken=YZOeA3UsxKOCmIhaBPWP4o0Od2rBtkqo3cHCvcJpk45790iM37RHxbweEw7qWZ51; sessionid=rpibesdbd7s6wbwxwrriqi8seg2lsi7w',
             },
+            'ADDITIONAL_PUT_COOKIE_TABSTYLE': {'tabstyle': 'raw-tab'},
             'PUT_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
-                 # 'Content-Length': '243',
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/json',
                 'Accept': 'text/html; q=1.0, */*',
                 'Sec-Fetch-Dest': 'empty',
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFTOKEN': '795vLL03vWakjyWxM3odA8Fs2OFy1J8VcmYTGUP0igrP6QX9elj53VbStilnuoNy',
+                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'cors',
-                'Referer': '',  # expects the url of the posting resource here!
+                'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
-                'Cookie': 'tabstyle=raw-tab; csrftoken=YZOeA3UsxKOCmIhaBPWP4o0Od2rBtkqo3cHCvcJpk45790iM37RHxbweEw7qWZ51; sessionid=rpibesdbd7s6wbwxwrriqi8seg2lsi7w',
             },
             'DELETE_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/html; q=1.0, */*',
                 'Sec-Fetch-Dest': 'empty',
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFTOKEN': '795vLL03vWakjyWxM3odA8Fs2OFy1J8VcmYTGUP0igrP6QX9elj53VbStilnuoNy',
+                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'cors',
-                'Referer': '',  # expects the url of the posting resource here!
+                'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
-                'Cookie': 'tabstyle=raw-tab; csrftoken=YZOeA3UsxKOCmIhaBPWP4o0Od2rBtkqo3cHCvcJpk45790iM37RHxbweEw7qWZ51; sessionid=rpibesdbd7s6wbwxwrriqi8seg2lsi7w',
             },
             'EXPECTED_API_SPEC': {
                 'name': 'Blog Post Api',
