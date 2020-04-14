@@ -15,7 +15,6 @@ Library          AdminUser
 Resource         CommonResource.robot
 Suite Setup      Suite Setup
 Test Teardown    Test Teardown
-Test Setup       Test Setup
 
 # To Run
 # python -m robot  --pythonpath Libraries/Src -d Results/ Tests/BlogPostApiTestsAsNoPriviligeUser.robot
@@ -24,13 +23,10 @@ Test Setup       Test Setup
 Suite Setup
     ${posting_spec} =   Set Variable    ${ADMIN}[EXPECTED_API_SPEC][actions][POST]
     Set Suite Variable      ${POSTING_SPEC}     ${posting_spec}
-
-Test Setup
     "Target Postings" Are Deleted
     "Pre-Set Postings" Are Cached
 
 Test Teardown
-    "Target Postings" Are Deleted
     "Registered Postings" Are Read
     Only "Pre-Set Postings" Are Left In The System
 
