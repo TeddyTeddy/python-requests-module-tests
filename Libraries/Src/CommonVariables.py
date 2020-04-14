@@ -7,6 +7,7 @@ def get_variables():
         'ACCEPT_TEXT_HTML_HEADER' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'ADMIN_LOGIN_QUERY_PARAMS': {'next':'/admin/'},
         'CONTENT_TYPE_IS_FORM_HEADER': 'application/x-www-form-urlencoded',
+        'ADDITIONAL_PUT_COOKIE_TABSTYLE': {'tabstyle': 'raw-tab'},
         'ADMIN': {
 			'USERNAME': 'hakan',
 			'PASSWORD': 'h1a2k3a4',
@@ -52,7 +53,6 @@ def get_variables():
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
             },
-            'ADDITIONAL_PUT_COOKIE_TABSTYLE': {'tabstyle': 'raw-tab'},
             'PUT_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
@@ -151,7 +151,6 @@ def get_variables():
                 'Accept': 'application/json',
                 'Sec-Fetch-Dest': 'empty',
                 'X-Requested-With': 'XMLHttpRequest',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
                 'Sec-Fetch-Site': 'same-origin',
@@ -159,7 +158,6 @@ def get_variables():
                 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Cookie': 'csrftoken=RHyE3NK61KZ3moRSwU27V39doEwRonc1F96Grq7MjsuqhSOY1LjGvVD9pQItGqgw',
             },
             'OPTIONS_RESPONSE_HEADERS': {
                 'Allow': 'GET, POST, HEAD, OPTIONS',
@@ -184,7 +182,6 @@ def get_variables():
                 'Connection': 'keep-alive',
                 'Cache-Control': 'max-age=0',
                 'Upgrade-Insecure-Requests': '1',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
                 'Sec-Fetch-Dest': 'document',
                 'Accept': 'application/json',  # Note: this is different from what browser sends to server.
                 'Sec-Fetch-Site': 'none',
@@ -192,13 +189,11 @@ def get_variables():
                 'Sec-Fetch-User': '?1',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Cookie': 'csrftoken=RHyE3NK61KZ3moRSwU27V39doEwRonc1F96Grq7MjsuqhSOY1LjGvVD9pQItGqgw',
             },
             'POST_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Sec-Fetch-Dest': 'empty',
@@ -208,39 +203,34 @@ def get_variables():
                 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
-                'Cookie': 'csrftoken=RHyE3NK61KZ3moRSwU27V39doEwRonc1F96Grq7MjsuqhSOY1LjGvVD9pQItGqgw',
             },
            'PUT_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/json',
                 'Accept': 'text/html; q=1.0, */*',
                 'Sec-Fetch-Dest': 'empty',
                 'X-Requested-With': 'XMLHttpRequest',
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'cors',
-                'Referer': '',  # expects the url of the posting resource here!
+                'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here!
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
-                'Cookie': 'csrftoken=RHyE3NK61KZ3moRSwU27V39doEwRonc1F96Grq7MjsuqhSOY1LjGvVD9pQItGqgw',
             },
             'DELETE_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Connection': 'keep-alive',
                 'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/80.0.3987.132 Chrome/80.0.3987.132 Safari/537.36',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/html; q=1.0, */*',
                 'Sec-Fetch-Dest': 'empty',
                 'X-Requested-With': 'XMLHttpRequest',
                 'Sec-Fetch-Site': 'same-origin',
                 'Sec-Fetch-Mode': 'cors',
-                'Referer': '',  # expects the url of the posting resource here!
+                'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here!
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
-                'Cookie': 'csrftoken=RHyE3NK61KZ3moRSwU27V39doEwRonc1F96Grq7MjsuqhSOY1LjGvVD9pQItGqgw',
             },
         },
         'INCOMPLETE_TARGET_POSTINGS': [
