@@ -22,7 +22,6 @@ class AdminUser:
         self._postings_uri = self._loader.builtin.get_variable_value("${POSTINGS_URI}")
         self._invalid_postings_uri = self._loader.builtin.get_variable_value("${INVALID_POSTINGS_URI}")
         self._accept_text_html_header = self._loader.builtin.get_variable_value("${ACCEPT_TEXT_HTML_HEADER}")
-        self._accept_application_json_header = self._loader.builtin.get_variable_value("${ACCEPT_APPLICATION_JSON_HEADER}") # post
         self._additional_put_cookie_tabstyle = self._loader.builtin.get_variable_value("${ADDITIONAL_PUT_COOKIE_TABSTYLE}")
         self._content_type_is_form_header = self._loader.builtin.get_variable_value("${CONTENT_TYPE_IS_FORM_HEADER}")
         self._expected_options_response_headers = self._admin["OPTIONS_RESPONSE_HEADERS"]
@@ -71,8 +70,8 @@ class AdminUser:
     @keyword
     def make_post_request(self, posting):
         # we need to get the posting form in html format provided by the server. The form has the needed csrfmiddlewaretoken in POST request
-        get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
-        post_form_get_response = self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=get_request_headers)
+        final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+        post_form_get_response = self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=final_get_request_headers)
 
         csrfmiddlewaretoken = get_csrfmiddlewaretoken(post_form_get_response.text)
         assert csrfmiddlewaretoken # the token must not be an empty string
@@ -91,8 +90,8 @@ class AdminUser:
 
     @keyword
     def make_put_request(self, posting):
-        get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
-        put_form_get_response = self._session.get(url=posting['url'], headers=get_request_headers)
+        final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+        put_form_get_response = self._session.get(url=posting['url'], headers=final_get_request_headers)
 
         csrfmiddlewaretoken = get_csrfmiddlewaretoken(put_form_get_response.text)
         assert csrfmiddlewaretoken # the token must not be an empty string
@@ -105,16 +104,16 @@ class AdminUser:
     @keyword
     def make_delete_request(self, posting):
         # first we need to get csrfmiddleware token, needed to make the delete request
-        ultimate_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
-        delete_posting_form_get_response = self._session.get(url=posting['url'], headers=ultimate_get_headers)
+        final_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+        delete_posting_form_get_response = self._session.get(url=posting['url'], headers=final_get_headers)
 
         csrfmiddlewaretoken = get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
         assert csrfmiddlewaretoken # the token must not be an empty string
 
         overwriting_delete_headers = {'X-CSRFTOKEN': csrfmiddlewaretoken, 'Referer': posting['url'] }
-        ultimate_delete_headers = ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
+        final_delete_headers = ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
 
-        return self._session.delete(url=posting['url'], data=posting, headers=ultimate_delete_headers)
+        return self._session.delete(url=posting['url'], data=posting, headers=final_delete_headers)
 
 
 
