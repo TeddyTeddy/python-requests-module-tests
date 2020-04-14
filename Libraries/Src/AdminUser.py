@@ -67,18 +67,29 @@ class AdminUser:
         assert options_response.headers['Content-Type'] == self._expected_options_response_headers['Content-Type']
         assert options_response.json() == self._admin['EXPECTED_API_SPEC']
 
+    def get_post_forms_csrfmiddlewaretoken(self):
+            # we need to get the posting form in html format provided by the server. The form has the needed csrfmiddlewaretoken in POST request
+            final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
+            post_form_get_response = self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=final_get_request_headers)
+
+            csrfmiddlewaretoken = get_csrfmiddlewaretoken(post_form_get_response.text)
+            assert csrfmiddlewaretoken # the token must not be an empty string
+            return csrfmiddlewaretoken
+
     @keyword
-    def make_post_request(self, posting):
-        # we need to get the posting form in html format provided by the server. The form has the needed csrfmiddlewaretoken in POST request
-        final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
-        post_form_get_response = self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=final_get_request_headers)
+    def make_post_request(self, posting, payload_encoding,  content_type_header):
+        if payload_encoding =='Form' and content_type_header == 'JSON':
+            csrfmiddlewaretoken = self.get_post_forms_csrfmiddlewaretoken()
+            post_form_data = ChainMap( {'csrfmiddlewaretoken': csrfmiddlewaretoken}, posting)
+            # note that self._admin['POST_REQUEST_HEADERS']['Content-Type'] is 'application/json'
+            return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', data=post_form_data, headers=self._admin['POST_REQUEST_HEADERS'])
 
-        csrfmiddlewaretoken = get_csrfmiddlewaretoken(post_form_get_response.text)
-        assert csrfmiddlewaretoken # the token must not be an empty string
-        additional_post_request_headers = {'X-CSRFTOKEN':csrfmiddlewaretoken}
-        final_post_request_headers = ChainMap(additional_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
+        else: # this is usual post request, no tricks
+            csrfmiddlewaretoken = self.get_post_forms_csrfmiddlewaretoken()
+            additional_post_request_headers = {'X-CSRFTOKEN':csrfmiddlewaretoken}
+            final_post_request_headers = ChainMap(additional_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
 
-        return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', json=posting, headers=final_post_request_headers)
+            return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', json=posting, headers=final_post_request_headers)
 
     @keyword
     def make_get_request(self):

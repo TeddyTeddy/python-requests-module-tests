@@ -35,8 +35,8 @@ Delete Every Posting Except "Pre-Set Postings"
     Delete Postings  candidate_postings_to_delete=${REGISTERED_POSTINGS}  postings_to_skip=${PRE_SET_POSTINGS}
 
 Create Posting
-    [Arguments]       ${posting}
-    ${POST_RESPONSE} =  Make Post Request  posting=${posting}
+    [Arguments]       ${posting}    ${payload_encoding}=${None}   ${content_type_header}=${None}
+    ${POST_RESPONSE} =  Make Post Request  posting=${posting}   payload_encoding=${payload_encoding}     content_type_header=${content_type_header}
     Set Test Variable   ${POST_RESPONSE}
 
 Verify Post Response Success Code
@@ -219,6 +219,18 @@ There Is No "Null Title And Null Content Posting" Registered In The System
     ${is_none_found} =     Is None Found     subset=${null-title-null-content-postings}   superset=${PRE_SET_POSTINGS}
     Should Be True   ${is_none_found}
 
+"Target Postings" Are Attempted To Be Created Using Form Encoding With Content-Type Header Set As JSON
+    # TODO: Consider to move the below logic to AdminUser.py
+    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
+    FOR     ${p}    IN  @{TARGET_POSTINGS}
+        Create Posting     posting=${p}     payload_encoding=Form   content_type_header=JSON
+        ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_CREATE_ATTEMPTS_FAILED_WITH_400 and $POST_RESPONSE.status_code==400
+    END
+    Set Test Variable    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
+
+All Create Responses Have Status Code "400-Bad Request
+    Should Be True  ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -348,8 +360,15 @@ Attempting To Read Postings with Invalid URI
     When Bad Read Request Is Made With Invalid URI
     Then Read Response Should Be "404-Not Found"
 
-
-
+"Target Postings" Are Attempted To Be Created Using Form Encoding With Content-Type Header Set As JSON
+    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    Given "Target Postings" Must Not Be Registered In The System
+    When "Target Postings" Are Attempted To Be Created Using Form Encoding With Content-Type Header Set As JSON
+    Then All Create Responses Have Status Code "400-Bad Request"
+    Then "Target Postings" Must Not Be Registered In The System
+    Then "Registered Postings" Are Read
+    Then "Registered Postings" Must Comply With "Posting Spec"
+    Then Only "Pre-Set Postings" Are Left In The System
 
 
 
