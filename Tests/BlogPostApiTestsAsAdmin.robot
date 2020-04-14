@@ -19,9 +19,9 @@ Test Setup       Test Setup
 Suite Setup
     ${posting_spec} =   Set Variable    ${ADMIN}[EXPECTED_API_SPEC][actions][POST]
     Set Suite Variable      ${POSTING_SPEC}     ${posting_spec}
+    "Pre-Set Postings" Are Cached
 
 Test Setup
-    "Pre-Set Postings" Are Cached
     Set Suite Variable  ${RANDOM_TARGET_POSTING}      ${None}
 
 Test Teardown
