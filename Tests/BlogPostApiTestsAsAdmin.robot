@@ -219,7 +219,7 @@ There Is No "Null Title And Null Content Posting" Registered In The System
     ${is_none_found} =     Is None Found     subset=${null-title-null-content-postings}   superset=${PRE_SET_POSTINGS}
     Should Be True   ${is_none_found}
 
-"Target Postings" Are Attempted To Be Created Using Form Encoding With Content-Type Header Set As JSON
+"Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
     # TODO: Consider to move the below logic to AdminUser.py
     ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
     FOR     ${p}    IN  @{TARGET_POSTINGS}
@@ -360,16 +360,15 @@ Attempting To Read Postings with Invalid URI
     When Bad Read Request Is Made With Invalid URI
     Then Read Response Should Be "404-Not Found"
 
-"Target Postings" Are Attempted To Be Created Using Form Encoding With Content-Type Header Set As JSON
+"Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
     [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
-    When "Target Postings" Are Attempted To Be Created Using Form Encoding With Content-Type Header Set As JSON
+    When "Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
     Then All Create Responses Have Status Code "400-Bad Request"
     Then "Target Postings" Must Not Be Registered In The System
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
-
 
 
 
