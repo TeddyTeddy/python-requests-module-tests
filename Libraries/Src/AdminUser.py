@@ -83,7 +83,12 @@ class AdminUser:
             post_form_data = ChainMap( {'csrfmiddlewaretoken': csrfmiddlewaretoken}, posting)
             # note that self._admin['POST_REQUEST_HEADERS']['Content-Type'] is 'application/json'
             return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', data=post_form_data, headers=self._admin['POST_REQUEST_HEADERS'])
+        elif payload_encoding == 'JSON' and content_type_header == 'Form':
+            csrfmiddlewaretoken = self.get_post_forms_csrfmiddlewaretoken()
+            additional_and_overwriting_post_request_headers = { 'X-CSRFTOKEN':csrfmiddlewaretoken, 'Content-Type': self._content_type_is_form_header }
+            final_post_request_headers = ChainMap( additional_and_overwriting_post_request_headers, self._admin['POST_REQUEST_HEADERS'] )
 
+            return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', json=posting, headers=final_post_request_headers)
         else: # this is usual post request, no tricks
             csrfmiddlewaretoken = self.get_post_forms_csrfmiddlewaretoken()
             additional_post_request_headers = {'X-CSRFTOKEN':csrfmiddlewaretoken}

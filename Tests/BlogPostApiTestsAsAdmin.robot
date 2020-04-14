@@ -231,6 +231,16 @@ There Is No "Null Title And Null Content Posting" Registered In The System
 All Create Responses Have Status Code "400-Bad Request
     Should Be True  ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
 
+"Target Postings" Are Attempted To Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
+    # TODO: Consider to move the below logic to AdminUser.py
+    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
+    FOR     ${p}    IN  @{TARGET_POSTINGS}
+        Create Posting     posting=${p}     payload_encoding=JSON   content_type_header=Form
+        Log     ${POST_RESPONSE.status_code}
+        ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_CREATE_ATTEMPTS_FAILED_WITH_400 and $POST_RESPONSE.status_code==400
+    END
+    Set Test Variable    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -370,5 +380,16 @@ Attempting To Read Postings with Invalid URI
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
 
-
+"Target Postings" Are Attempted To Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
+    [Documentation]     The system under test should not allow creation of a posting, which is JSON encoded in POST request
+    ...                 and the POST request tells that "Content-Type" is Form. This test should be correct and the system
+    ...                 under test must be changed.
+    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    Given "Target Postings" Must Not Be Registered In The System
+    When "Target Postings" Are Attempted To Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
+    Then All Create Responses Have Status Code "400-Bad Request"
+    Then "Target Postings" Must Not Be Registered In The System
+    Then "Registered Postings" Are Read
+    Then "Registered Postings" Must Comply With "Posting Spec"
+    Then Only "Pre-Set Postings" Are Left In The System
 
