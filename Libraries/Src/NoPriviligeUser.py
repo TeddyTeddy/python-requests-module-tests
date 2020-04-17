@@ -21,7 +21,7 @@ class NoPriviligeUser:
         self._expected_options_response_headers = self._user["OPTIONS_RESPONSE_HEADERS"]
         self._additional_put_cookie_tabstyle = self._loader.builtin.get_variable_value("${ADDITIONAL_PUT_COOKIE_TABSTYLE}")
 
-        self._session = requests.Session()
+        self._session = requests.Session()  # TODO: remove session and have no authentication header
 
     def __del__(self):
         self._session.close()

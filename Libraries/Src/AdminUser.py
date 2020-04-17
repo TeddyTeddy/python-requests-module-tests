@@ -28,7 +28,7 @@ class AdminUser:
         self._admin_login_uri = self._loader.builtin.get_variable_value("${ADMIN_LOGIN_URI}")
         self._admin_login_query_params = self._loader.builtin.get_variable_value("${ADMIN_LOGIN_QUERY_PARAMS}")
 
-        self._session = requests.Session()
+        self._session = requests.Session()  # TODO: get rid of the session and have authentication header
         self.login_as_admin()
 
     def login_as_admin(self):
@@ -76,6 +76,7 @@ class AdminUser:
             assert csrfmiddlewaretoken # the token must not be an empty string
             return csrfmiddlewaretoken
 
+    # TODO: Change the keyword as create_posting and repeat the same for other keywords
     @keyword
     def make_post_request(self, posting, payload_encoding,  content_type_header):
         if payload_encoding =='Form' and content_type_header == 'JSON':
@@ -106,6 +107,7 @@ class AdminUser:
 
     @keyword
     def make_put_request(self, posting):
+        # Wrap the token grabbing logic into a utility helper function
         final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
         put_form_get_response = self._session.get(url=posting['url'], headers=final_get_request_headers)
 

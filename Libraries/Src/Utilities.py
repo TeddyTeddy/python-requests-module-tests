@@ -24,6 +24,7 @@ def get_csrfmiddlewaretoken(response_text):
     if match and len(match.groups()) == 1:  # bingo! a match with the pattern found
         return match.groups()[0]
 
+    # TODO: throw AssertionError here
     return None
 
 def get_uri(url):
