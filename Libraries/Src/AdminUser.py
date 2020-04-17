@@ -116,19 +116,19 @@ class AdminUser:
     def make_bad_get_request(self):
         return self._session.get(url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
 
-    @keyword
-    def make_put_request(self, posting):
-        # TODO: Add a utility method to form csrfmiddlewaretoken for the put request
+    def get_put_forms_csrfmiddlewaretoken(self, posting):
         final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
         put_form_get_response = self._session.get(url=posting['url'], headers=final_get_request_headers)
+        return get_csrfmiddlewaretoken(put_form_get_response.text)
 
-        csrfmiddlewaretoken = get_csrfmiddlewaretoken(put_form_get_response.text)
+    def get_final_put_request_headers(self, posting):
+        overwriting_put_request_headers = {'Referer':posting['url'], 'X-CSRFTOKEN':self.get_put_forms_csrfmiddlewaretoken(posting) }
+        return ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
 
-        # TODO: put the header forming logic into its own function
-        overwriting_put_request_headers = {'Referer':posting['url'], 'X-CSRFTOKEN':csrfmiddlewaretoken }
-        final_put_request_headers = ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
-
-        return self._session.put(url=posting['url'], headers=final_put_request_headers,  json=posting, cookies=self._additional_put_cookie_tabstyle)
+    @keyword
+    def make_put_request(self, posting):
+        return self._session.put(url=posting['url'], headers=self.get_final_put_request_headers(posting),
+                                json=posting, cookies=self._additional_put_cookie_tabstyle)
 
     @keyword
     def make_delete_request(self, posting):
