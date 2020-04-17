@@ -28,7 +28,12 @@ class AdminUser:
         self._admin_login_uri = self._loader.builtin.get_variable_value("${ADMIN_LOGIN_URI}")
         self._admin_login_query_params = self._loader.builtin.get_variable_value("${ADMIN_LOGIN_QUERY_PARAMS}")
 
-        self._session = requests.Session()  # TODO: get rid of the session and have authentication header
+        # Session holds sessionid & csrftoken in its cookies, which is shared accross all the requests made through the session
+        # Note that there are 2 alternative ways to make authorized requests:
+        # (1) Using session & login mechanism
+        # (2) Passing Authorization header in all requests
+        # (2) is not recognized by the API. That's why we use (1).
+        self._session = requests.Session()  # NOTE: session is necessary to keep sessionid & csrftoken in cookie header accross all requests
         self.login_as_admin()
 
     def login_as_admin(self):
