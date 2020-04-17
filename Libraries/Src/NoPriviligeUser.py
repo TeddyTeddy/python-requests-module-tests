@@ -21,14 +21,9 @@ class NoPriviligeUser:
         self._expected_options_response_headers = self._user["OPTIONS_RESPONSE_HEADERS"]
         self._additional_put_cookie_tabstyle = self._loader.builtin.get_variable_value("${ADDITIONAL_PUT_COOKIE_TABSTYLE}")
 
-        self._session = requests.Session()  # TODO: remove session and have no authentication header
-
-    def __del__(self):
-        self._session.close()
-
     @keyword
     def make_options_request(self):
-        return self._session.options( url=f'{self._api_base_url}{self._postings_uri}', headers=self._user['OPTIONS_REQUEST_HEADERS'])
+        return requests.options( url=f'{self._api_base_url}{self._postings_uri}', headers=self._user['OPTIONS_REQUEST_HEADERS'])
 
     @keyword
     def verify_options_response(self, options_response):
@@ -40,26 +35,26 @@ class NoPriviligeUser:
 
     @keyword
     def make_post_request(self, posting):
-        return self._session.post( url=f'{self._api_base_url}{self._postings_uri}', headers=self._user['POST_REQUEST_HEADERS'],  json=posting )
+        return requests.post( url=f'{self._api_base_url}{self._postings_uri}', headers=self._user['POST_REQUEST_HEADERS'],  json=posting )
 
     @keyword
     def make_get_request(self):
-        return self._session.get( url=f'{self._api_base_url}{self._postings_uri}', headers=self._user['GET_REQUEST_HEADERS'] )
+        return requests.get( url=f'{self._api_base_url}{self._postings_uri}', headers=self._user['GET_REQUEST_HEADERS'] )
 
     @keyword
     def make_bad_get_request(self):
-        return self._session.get( url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._user['GET_REQUEST_HEADERS'] )
+        return requests.get( url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._user['GET_REQUEST_HEADERS'] )
 
     @keyword
     def make_put_request(self, posting):
         self._user['PUT_REQUEST_HEADERS']['Referer'] = posting['url']
-        return self._session.put( url=posting['url'], headers=self._user['PUT_REQUEST_HEADERS'],  json=posting,
+        return requests.put( url=posting['url'], headers=self._user['PUT_REQUEST_HEADERS'],  json=posting,
                                   cookies=self._additional_put_cookie_tabstyle )
 
     @keyword
     def make_delete_request(self, posting):
         self._user['DELETE_REQUEST_HEADERS']['Referer'] = posting['url']
-        return self._session.delete( url=posting['url'], headers=self._user['DELETE_REQUEST_HEADERS'],  data=posting )
+        return requests.delete( url=posting['url'], headers=self._user['DELETE_REQUEST_HEADERS'],  data=posting )
 
 
 
