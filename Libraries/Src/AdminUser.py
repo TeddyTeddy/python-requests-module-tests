@@ -37,6 +37,7 @@ class AdminUser:
         self.login_as_admin()
 
     def login_as_admin(self):
+        # TODO: Add a utility method to form get csrfmiddlewaretoken for the post request
         login_url = f'{self._api_base_url}{self._admin_login_uri}'
 
         # request the login page in HTML form
@@ -46,6 +47,7 @@ class AdminUser:
 
         csrfmiddlewaretoken = get_csrfmiddlewaretoken(login_page_get_response.text)
 
+        # TODO: Add a utility method to form request headers for the post request
         referer_url = f'{login_url}{self._admin_login_query_params}'
         overwritten_post_request_headers = {'Referer': referer_url, 'Content-Type': self._content_type_is_form_header }
         final_post_request_headers = ChainMap(overwritten_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
@@ -77,6 +79,7 @@ class AdminUser:
             post_form_get_response = self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=final_get_request_headers)
 
             csrfmiddlewaretoken = get_csrfmiddlewaretoken(post_form_get_response.text)
+            # TODO: remove the line below
             assert csrfmiddlewaretoken # the token must not be an empty string
             return csrfmiddlewaretoken
 
@@ -111,12 +114,13 @@ class AdminUser:
 
     @keyword
     def make_put_request(self, posting):
-        # Wrap the token grabbing logic into a utility helper function
+        # TODO: Add a utility method to form csrfmiddlewaretoken for the put request
         final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
         put_form_get_response = self._session.get(url=posting['url'], headers=final_get_request_headers)
 
         csrfmiddlewaretoken = get_csrfmiddlewaretoken(put_form_get_response.text)
 
+        # TODO: put the header forming logic into its own function
         overwriting_put_request_headers = {'Referer':posting['url'], 'X-CSRFTOKEN':csrfmiddlewaretoken }
         final_put_request_headers = ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
 
@@ -124,12 +128,14 @@ class AdminUser:
 
     @keyword
     def make_delete_request(self, posting):
+        # TODO: Add a utility method to form csrfmiddlewaretoken for the put request
         # first we need to get csrfmiddleware token, needed to make the delete request
         final_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
         delete_posting_form_get_response = self._session.get(url=posting['url'], headers=final_get_headers)
 
         csrfmiddlewaretoken = get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
 
+        # TODO: put the header forming logic into its own function
         overwriting_delete_headers = {'X-CSRFTOKEN': csrfmiddlewaretoken, 'Referer': posting['url'] }
         final_delete_headers = ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
 
