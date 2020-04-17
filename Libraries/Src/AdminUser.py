@@ -130,20 +130,18 @@ class AdminUser:
         return self._session.put(url=posting['url'], headers=self.get_final_put_request_headers(posting),
                                 json=posting, cookies=self._additional_put_cookie_tabstyle)
 
-    @keyword
-    def make_delete_request(self, posting):
-        # TODO: Add a utility method to form csrfmiddlewaretoken for the put request
-        # first we need to get csrfmiddleware token, needed to make the delete request
+    def get_delete_forms_csrfmiddlewaretoken(self, posting):
         final_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
         delete_posting_form_get_response = self._session.get(url=posting['url'], headers=final_get_headers)
+        return get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
 
-        csrfmiddlewaretoken = get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
+    def get_final_put_request_headers(self, posting):
+        overwriting_delete_headers = {'X-CSRFTOKEN': self.get_put_forms_csrfmiddlewaretoken(posting), 'Referer': posting['url'] }
+        return ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
 
-        # TODO: put the header forming logic into its own function
-        overwriting_delete_headers = {'X-CSRFTOKEN': csrfmiddlewaretoken, 'Referer': posting['url'] }
-        final_delete_headers = ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
-
-        return self._session.delete(url=posting['url'], data=posting, headers=final_delete_headers)
+    @keyword
+    def make_delete_request(self, posting):
+        return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_put_request_headers(posting))
 
 
 
