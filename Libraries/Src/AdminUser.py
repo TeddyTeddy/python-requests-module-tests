@@ -36,25 +36,31 @@ class AdminUser:
         self._session = requests.Session()  # NOTE: session is necessary to keep sessionid & csrftoken in cookie header accross all requests
         self.login_as_admin()
 
-    def login_as_admin(self):
-        # TODO: Add a utility method to form get csrfmiddlewaretoken for the post request
-        login_url = f'{self._api_base_url}{self._admin_login_uri}'
-
+    def _make_login_page_request(self, login_url):
         # request the login page in HTML form
         final_get_request_headers = ChainMap( {'Accept' : self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'] )
         login_page_get_response = self._session.get(login_url, params=self._admin_login_query_params, headers=final_get_request_headers )
+
         assert self._session.cookies['csrftoken']          # the token must not be an empty string
+        return login_page_get_response
 
-        csrfmiddlewaretoken = get_csrfmiddlewaretoken(login_page_get_response.text)
-
-        # TODO: Add a utility method to form request headers for the post request
+    def _get_final_post_request_headers(self, login_url):
         referer_url = f'{login_url}{self._admin_login_query_params}'
         overwritten_post_request_headers = {'Referer': referer_url, 'Content-Type': self._content_type_is_form_header }
-        final_post_request_headers = ChainMap(overwritten_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
-        login_form_data = dict(username=self._admin['USERNAME'], password=self._admin['PASSWORD'],
-                               csrfmiddlewaretoken=csrfmiddlewaretoken, next='/admin/')
+        return ChainMap(overwritten_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
+
+    def _get_login_form_data(self, csrfmiddlewaretoken):
+        return dict(username=self._admin['USERNAME'], password=self._admin['PASSWORD'],
+                    csrfmiddlewaretoken=csrfmiddlewaretoken, next='/admin/')
+
+    def login_as_admin(self):
+        login_url = f'{self._api_base_url}{self._admin_login_uri}'
+        csrfmiddlewaretoken = get_csrfmiddlewaretoken(self._make_login_page_request(login_url).text)
+
         # make login request by submitting form encoded data
-        login_form_post_response = self._session.post(url=login_url, data=login_form_data, headers=final_post_request_headers)
+        login_form_post_response = self._session.post(url=login_url,
+                                                      data=self._get_login_form_data(csrfmiddlewaretoken),
+                                                      headers=self._get_final_post_request_headers(login_url))
         assert login_form_post_response.status_code == 200  # logged in; session has sessionid must be in cookies now
         assert 'sessionid' in self._session.cookies
 
