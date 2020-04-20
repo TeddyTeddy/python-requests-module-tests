@@ -86,9 +86,6 @@ Must Be Registered In The System
 "Null Title Posting" Must Be Registered In The System
     Must Be Registered In The System    posting=${NULL_TITLE_POSTING}
 
-"Null Content Posting" Must Be Registered In The System
-    Must Be Registered In The System    posting=${NULL_CONTENT_POSTING}
-
 "Null Title And Null Content Posting" Must Be Registered In The System
     Must Be Registered In The System    posting=${NULL_TITLE_NULL_CONTENT_POSTING}
 
@@ -195,9 +192,6 @@ Update Response Has Status Code 200
 "title" Field Is Modified in "Random Target Posting"
     Set To Dictionary   ${RANDOM_TARGET_POSTING}      title=${OVERWRITTEN_TITLE}
 
-"Null Content Posting" Is Created
-    Create Posting  posting=${NULL_CONTENT_POSTING}
-
 "Null Title And Null Content Posting" Is Created
     Create Posting  posting=${NULL_TITLE_NULL_CONTENT_POSTING}
 
@@ -207,11 +201,6 @@ Bad Read Request Is Made With Invalid URI
 
 Read Response Should Be "404-Not Found"
     Should Be True   $GET_RESPONSE.status_code == 404
-
-There Is No "Null Content Posting" Registered In The System
-    @{null-content-postings} =    Create List     ${NULL_CONTENT_POSTING}
-    ${is_none_found} =     Is None Found     subset=${null-content-postings}   superset=${PRE_SET_POSTINGS}
-    Should Be True   ${is_none_found}
 
 There Is No "Null Title And Null Content Posting" Registered In The System
     @{null-title-null-content-postings} =    Create List     ${NULL_TITLE_NULL_CONTENT_POSTING}
@@ -327,14 +316,6 @@ Updating "Random Target Posting" With Missing "content" Field And Modified "titl
     When "Random Target Posting" Is Updated To The System
     Then Update Response Has Status Code 200
     Then "Random Target Posting" Must Be Registered In The System
-
-Creating "Null Content Posting"
-    # TODO: This test case should be a negative test case, not positive
-    [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
-    Given There Is No "Null Content Posting" Registered In The System
-    When "Null Content Posting" Is Created
-    Then Verify Post Response Success Code
-    Then "Null Content Posting" Must Be Registered In The System
 
 Creating "Null Title And Null Content Posting"
     # TODO: This test case should be a negative test case, not positive
