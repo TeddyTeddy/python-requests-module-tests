@@ -143,6 +143,29 @@ def get_variables():
                 'Vary': 'Accept, Cookie',
                 'Content-Type': 'application/json',
             },
+            'DOING_CREATE_WITH_PARAMETERS' : [
+                # [Posting, expected_POST_result_code]
+                [{}, 400],  # empty dictionary as posting
+                [{'title': None}, 400],
+                [{'content': None}, 400],
+                [{'title': None, 'content':None}, 400],
+                [{'title': 'Null content posting'}, 400],
+                [{'content': 'Null title posting'}, 400],
+                [{'title': 'None Content', 'content': None}, 400],
+                [{'title': None, 'content': 'None Title'}, 400],
+                [{'title': ''}, 400],
+                [{'content': ''}, 400],
+                [{'title': '', 'content': ''}, 400],
+                [{'title': '', 'content': 'Some Content'}, 400],
+                [{'title': 'Some title', 'content': ''}, 400],
+                [{'title': '', 'content': None}, 400],
+                [{'title': None, 'content': ''}, 400],
+                [{'title': True, 'content': True}, 400],
+                [{'title': 1234, 'content': 3456}, 400],
+                [{'title': 'Valid Title', 'content': 'Valid Content'}, 201],
+                [{'title': 'Very Very Very Long Title', 'content': 'Very Very Very Long Content'}, 201],
+                # TODO: Add more test cases here
+            ],
         },
         'NO_PRIVILIGE_USER': {
             'OPTIONS_REQUEST_HEADERS': {
@@ -233,7 +256,7 @@ def get_variables():
                 'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
             },
         },
-        'INCOMPLETE_TARGET_POSTINGS': [
+        'INCOMPLETE_TARGET_POSTINGS': [  # we BAT test CRUD operations on these posts
             {'title': 'Posting 1', 'content': 'Posting 1 content'},
             {'title': 'Posting 2', 'content': 'Posting 2 content'},
             {'title': 'Posting 3', 'content': 'Posting 3 content'},

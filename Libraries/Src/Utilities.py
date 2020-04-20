@@ -158,3 +158,45 @@ def delete_postings(candidate_postings_to_delete,  postings_to_skip):
     for p in candidate_postings_to_delete:
         if p not in postings_to_skip:
             loader.builtin.run_keyword('Make Delete Request',  p)  # TODO: Cannot receive DELETE response
+
+
+@keyword
+def extract_postings(admin_doing_create_with_parameters, include_expected_create_response_code=None, exclude_expected_create_response_code=None):
+    """
+        :param  admin_doing_create_with_parameters: it is a list where each item is a list:
+                Each inner item is in the following format:
+                inner item: [posting, expected_post_response_code, (received_post_response_code)]
+        :return  a list of postings in the inner items of admin_doing_create_with_parameters
+
+        Example:
+        admin_doing_create_with_parameters = [
+            [{'title': '', 'content': ''}, 201],
+            [{'title': True, 'content': True}, 400],
+        ]
+
+        :return: [
+            {'title': '', 'content': ''},
+            {'title': True, 'content': True},
+        ]
+    """
+    result = []
+    for inner_item in admin_doing_create_with_parameters:
+        if include_expected_create_response_code is not None and inner_item[1] == include_expected_create_response_code: # extract only included
+            result.append(inner_item[0])
+        if exclude_expected_create_response_code is not None and inner_item[1] != exclude_expected_create_response_code: # extract only not excluded
+            result.append(inner_item[0])
+        if include_expected_create_response_code is None and exclude_expected_create_response_code is None:  # extract every posting
+            result.append(inner_item[0])
+    return result
+
+
+@keyword
+def compare_expected_vs_observed_create_response_codes(admin_doing_create_with_parameters):
+    all_expected_vs_observed_create_response_codes_match = True
+    for item in admin_doing_create_with_parameters:
+        if item[1] == item[2]:  # expected create response code == observed_create_response_code
+            logger.info(f"Test passed: Posting {item[0]}, expected & observed create response code: {item[1]}")
+        else:
+            logger.error(f"Test failed: Posting {item[0]}, expected create response code: {item[1]}, observed create response code: {item[2]}")
+            all_expected_vs_observed_create_response_codes_match = False
+    return all_expected_vs_observed_create_response_codes_match

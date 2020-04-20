@@ -143,6 +143,14 @@ class AdminUser:
     def make_delete_request(self, posting):
         return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_put_request_headers(posting))
 
+    @keyword
+    def make_post_requests_and_store_the_result_codes(self, admin_doing_create_with_parameters):
+        for item in admin_doing_create_with_parameters:
+            post_response = self.make_post_request(posting=item[0], payload_encoding=None,  content_type_header=None)
+            if len(item) == 3:
+                item.pop()
+            item.insert(2, post_response.status_code)
+
 
 
 
