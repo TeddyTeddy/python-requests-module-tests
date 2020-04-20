@@ -144,7 +144,7 @@ def get_variables():
                 'Content-Type': 'application/json',
             },
             'DOING_CREATE_WITH_PARAMETERS' : [
-                # [Posting, expected_POST_result_code]
+                # [Posting, expected_POST_result_code, (observed_POST_result_code)]
                 [{}, 400],  # empty dictionary as posting
                 [{'title': None}, 400],
                 [{'content': None}, 400],
