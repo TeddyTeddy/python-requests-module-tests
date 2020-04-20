@@ -261,9 +261,6 @@ def get_variables():
             {'title': 'Posting 2', 'content': 'Posting 2 content'},
             {'title': 'Posting 3', 'content': 'Posting 3 content'},
         ],
-        'NULL_TITLE_POSTING': {
-            'content': 'only has content, but no title'
-        },
         'NULL_CONTENT_POSTING': {
 	        "title": "Null Content Posting"
         },

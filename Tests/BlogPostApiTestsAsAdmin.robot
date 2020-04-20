@@ -195,9 +195,6 @@ Update Response Has Status Code 200
 "title" Field Is Modified in "Random Target Posting"
     Set To Dictionary   ${RANDOM_TARGET_POSTING}      title=${OVERWRITTEN_TITLE}
 
-"Null Title Posting" Is Created
-    Create Posting  posting=${NULL_TITLE_POSTING}
-
 "Null Content Posting" Is Created
     Create Posting  posting=${NULL_CONTENT_POSTING}
 
@@ -210,11 +207,6 @@ Bad Read Request Is Made With Invalid URI
 
 Read Response Should Be "404-Not Found"
     Should Be True   $GET_RESPONSE.status_code == 404
-
-There Is No "Null Title Posting" Registered In The System
-    @{null-title-postings} =    Create List     ${NULL_TITLE_POSTING}
-    ${is_none_found} =     Is None Found     subset=${null-title-postings}   superset=${PRE_SET_POSTINGS}
-    Should Be True   ${is_none_found}
 
 There Is No "Null Content Posting" Registered In The System
     @{null-content-postings} =    Create List     ${NULL_CONTENT_POSTING}
@@ -335,14 +327,6 @@ Updating "Random Target Posting" With Missing "content" Field And Modified "titl
     When "Random Target Posting" Is Updated To The System
     Then Update Response Has Status Code 200
     Then "Random Target Posting" Must Be Registered In The System
-
-Creating "Null Title Posting"
-    # TODO: This test case should be a negative test case, not positive
-    [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
-    Given There Is No "Null Title Posting" Registered In The System
-    When "Null Title Posting" Is Created
-    Then Verify Post Response Success Code
-    Then "Null Title Posting" Must Be Registered In The System
 
 Creating "Null Content Posting"
     # TODO: This test case should be a negative test case, not positive
