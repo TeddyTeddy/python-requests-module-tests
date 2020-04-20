@@ -261,9 +261,6 @@ def get_variables():
             {'title': 'Posting 2', 'content': 'Posting 2 content'},
             {'title': 'Posting 3', 'content': 'Posting 3 content'},
         ],
-        'NULL_TITLE_NULL_CONTENT_POSTING': {
-
-        },
         'OVERWRITTEN_TITLE': 'Overwritten title',
         'OVERWRITTEN_CONTENT': 'Overwritten content',
         'POSTINGS_URI': '/api/postings/',
