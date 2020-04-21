@@ -31,17 +31,8 @@ def get_variables():
             },
             'POST_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
-                'Connection': 'keep-alive',
-                'Origin': 'https://glacial-earth-31542.herokuapp.com',
                 'Content-Type': 'application/json', # default value for creating a posting, can be overwritten by CONTENT_TYPE_IS_FORM_HEADER in ChainMap implementation
-                'Accept': 'text/html; q=1.0, */*',
-                'Sec-Fetch-Dest': 'empty',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Sec-Fetch-Site': 'same-origin',
-                'Sec-Fetch-Mode': 'cors',
                 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
             },
             'PUT_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
