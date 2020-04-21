@@ -32,18 +32,9 @@ def get_variables():
             },
             'DELETE_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
-                'Connection': 'keep-alive',
-                'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'text/html; q=1.0, */*',
-                'Sec-Fetch-Dest': 'empty',
-                'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
-                'Sec-Fetch-Site': 'same-origin',
-                'Sec-Fetch-Mode': 'cors',
                 'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
             },
             'EXPECTED_API_SPEC': {
                 'name': 'Blog Post Api',
