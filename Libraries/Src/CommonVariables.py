@@ -27,17 +27,7 @@ def get_variables():
             },
             'GET_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
-                'Connection': 'keep-alive',
-                'Cache-Control': 'max-age=0',
-                'Upgrade-Insecure-Requests': '1',
-                'Sec-Fetch-Dest': 'document',
                 'Accept': 'application/json',  # can be overwritten by ACCEPT_TEXT_HTML_HEADER in ChainMap implementation
-                'Sec-Fetch-Site': 'same-origin',
-                'Sec-Fetch-Mode': 'navigate',
-                'Sec-Fetch-User': '?1',
-                'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'en-US,en;q=0.9,fi;q=0.8',
             },
             'POST_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
