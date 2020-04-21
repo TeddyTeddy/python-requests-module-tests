@@ -123,17 +123,7 @@ def get_variables():
         'NO_PRIVILIGE_USER': {
             'OPTIONS_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
-                'Connection': 'keep-alive',
                 'Accept': 'application/json',
-                'Sec-Fetch-Dest': 'empty',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Origin': 'https://glacial-earth-31542.herokuapp.com',
-                'Sec-Fetch-Site': 'same-origin',
-                'Sec-Fetch-Mode': 'cors',
-                'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'en-US,en;q=0.9',
             },
             'OPTIONS_RESPONSE_HEADERS': {
                 'Allow': 'GET, POST, HEAD, OPTIONS',
