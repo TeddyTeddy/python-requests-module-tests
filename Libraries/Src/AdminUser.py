@@ -1,6 +1,6 @@
 from LibraryLoader import LibraryLoader
 from robot.api.deco import keyword
-from Utilities import get_uri, get_csrfmiddlewaretoken
+from Utilities import get_uri, get_csrfmiddlewaretoken, populate_request_headers
 from robot.api import logger
 import requests
 from collections import ChainMap
@@ -109,12 +109,22 @@ class AdminUser:
             return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', json=posting, headers=final_post_request_headers)
 
     @keyword
-    def make_get_request(self):
-        return self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
+    def make_get_request(self, headers=None):
+        if headers is None:
+            headers = self._admin['GET_REQUEST_HEADERS']
+        return self._session.get(url=f'{self._api_base_url}{self._postings_uri}', headers=headers)
 
     @keyword
     def make_bad_get_request(self):
         return self._session.get(url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
+
+    @keyword
+    def make_multiple_get_requests_with_different_headers(self):
+        result = []
+        for get_headers_combination in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
+            get_response = self.make_get_request(headers=get_headers_combination)
+            result.append([get_headers_combination, get_response.status_code])
+        return result
 
     def get_put_forms_csrfmiddlewaretoken(self, posting):
         final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])

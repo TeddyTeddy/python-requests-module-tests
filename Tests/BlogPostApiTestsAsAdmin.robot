@@ -13,7 +13,7 @@ Test Teardown    Test Teardown
 Test Setup       Test Setup
 
 # To Run
-# python -m robot  --pythonpath Libraries/Src -d Results/ Tests/BlogPostApiTestsAsAdmin.robot
+# python -m robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/BlogPostApiTestsAsAdmin.robot
 
 *** Keywords ***
 Suite Setup
@@ -237,6 +237,16 @@ Only The Postings Having Expected Create Response Code "201-Created" Are Registe
     ${is_none_found} =      Is None Found   subset=${everything_except_201_postings}     superset=${REGISTERED_POSTINGS}
     Should Be True  ${is_none_found}
 
+
+Multiple Read Requests Are Made With Different Headers
+    ${RESULTS} =     Make Multiple Get Requests With Different Headers
+    Set Test Variable   @{RESULTS}
+    Log     ${RESULTS}
+
+Results Are Stored In "admin_read_requests_parameterized.txt"
+    Write To File  filename=admin_read_requests_parameterized.txt  source=${RESULTS}
+
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -376,3 +386,9 @@ Create Postings With Different Parameters
     Then Each Posting In The List "DOING_CREATE_WITH_PARAMETERS" Got Its Expected Create Response Code
     Then Only The Postings Having Expected Create Response Code "201-Created" Are Registered In The System
     Then "Registered Postings" Must Comply With "Posting Spec"
+
+Gather The Results of Several Read Requests With Different Headers
+    [Tags]      requirements-gathering
+    When Multiple Read Requests Are Made With Different Headers
+    Then Results Are Stored In "admin_read_requests_parameterized.txt"
+

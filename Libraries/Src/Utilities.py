@@ -1,8 +1,9 @@
 from urllib.parse import urlparse
 from robot.api.deco import keyword
-import re
+import re, os
 import CommonVariables
 from LibraryLoader import LibraryLoader
+from itertools import combinations
 from robot.api import logger
 
 
@@ -200,3 +201,44 @@ def compare_expected_vs_observed_create_response_codes(admin_doing_create_with_p
             logger.error(f"Test failed: Posting {item[0]}, expected create response code: {item[1]}, observed create response code: {item[2]}")
             all_expected_vs_observed_create_response_codes_match = False
     return all_expected_vs_observed_create_response_codes_match
+
+
+def form_result(key_combination, original_request_headers):
+    result = {}
+    for key in key_combination:
+        result[key] = original_request_headers[key]
+    return result
+
+def populate_request_headers(original_request_headers):
+    """
+    :param original_request_headers: a dictionary of request headers, from which populated result is derived
+    :yield result: a dict of request headers
+    """
+    # result is created by removing one item at a time from original_request_headers
+    keys = list(original_request_headers.keys())
+    length = 1
+    while length < len(keys):
+        # https://www.geeksforgeeks.org/permutation-and-combination-in-python/
+        iterator = combinations(keys, length)  # a generator
+        for key_combination in iterator:
+            yield form_result(key_combination, original_request_headers)
+        length+=1
+
+    yield {}
+
+
+def get_path_to_data_folder():
+    current_abs_path = os.path.abspath(os.getcwd())     # gets the current abs path to this py file
+    sep = os.path.sep  # get os specific path seperator (either '\' for Windows or '/' for linux)
+    return f'{current_abs_path}{sep}Data{sep}'               # forms src_abs_path from the grabbed string
+
+def write_to_file(filename, source):
+    data_abs_path = get_path_to_data_folder()
+    sep = os.path.sep  # get os specific path seperator (either '\' for Windows or '/' for linux)
+    full_path_to_file = f'{data_abs_path}{sep}{filename}'
+    f = open(full_path_to_file, "w+")   # overwrites the contents of the file
+    if type(source) == str:
+        f.write(source)
+    else:
+        f.write(str(source))
+    f.close()
