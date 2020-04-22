@@ -119,12 +119,19 @@ class AdminUser:
         return self._session.get(url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
 
     @keyword
-    def make_multiple_get_requests_with_different_headers(self):
-        result = []
-        for get_headers_combination in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
-            get_response = self.make_get_request(headers=get_headers_combination)
-            result.append([get_headers_combination, get_response.status_code])
-        return result
+    def make_multiple_get_requests_with_different_headers(self, read_requests=None):
+        if read_requests is None:
+            result = []
+            for get_headers_combination in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
+                get_response = self.make_get_request(headers=get_headers_combination)
+                result.append([get_headers_combination, get_response.status_code])
+            return result
+        else:
+            for item in read_requests:
+                get_response = self.make_get_request(headers=item[0])
+                if len(item) == 3:
+                    item.pop()
+                item.insert(2, get_response.status_code)  # modifies read_requests list
 
     def get_put_forms_csrfmiddlewaretoken(self, posting):
         final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
@@ -154,12 +161,12 @@ class AdminUser:
         return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_put_request_headers(posting))
 
     @keyword
-    def make_post_requests_and_store_the_result_codes(self, admin_doing_create_with_parameters):
-        for item in admin_doing_create_with_parameters:
+    def make_post_requests_and_store_the_result_codes(self, item_list):
+        for item in item_list:
             post_response = self.make_post_request(posting=item[0], payload_encoding=None,  content_type_header=None)
             if len(item) == 3:
                 item.pop()
-            item.insert(2, post_response.status_code)
+            item.insert(2, post_response.status_code)   # modifies item_list
 
 
 

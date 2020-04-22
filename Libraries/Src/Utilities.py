@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 from robot.api.deco import keyword
-import re, os
+import re, os, ast
 import CommonVariables
 from LibraryLoader import LibraryLoader
 from itertools import combinations
@@ -162,12 +162,12 @@ def delete_postings(candidate_postings_to_delete,  postings_to_skip):
 
 
 @keyword
-def extract_postings(admin_doing_create_with_parameters, include_expected_create_response_code=None, exclude_expected_create_response_code=None):
+def extract_postings(item_list, include_expected_create_response_code=None, exclude_expected_create_response_code=None):
     """
-        :param  admin_doing_create_with_parameters: it is a list where each item is a list:
+        :param  item_list: it is a list where each item is a list:
                 Each inner item is in the following format:
                 inner item: [posting, expected_post_response_code, (received_post_response_code)]
-        :return  a list of postings in the inner items of admin_doing_create_with_parameters
+        :return  a list of postings from the inner items of admin_doing_create_with_parameters
 
         Example:
         admin_doing_create_with_parameters = [
@@ -181,26 +181,26 @@ def extract_postings(admin_doing_create_with_parameters, include_expected_create
         ]
     """
     result = []
-    for inner_item in admin_doing_create_with_parameters:
-        if include_expected_create_response_code is not None and inner_item[1] == include_expected_create_response_code: # extract only included
-            result.append(inner_item[0])
-        if exclude_expected_create_response_code is not None and inner_item[1] != exclude_expected_create_response_code: # extract only not excluded
-            result.append(inner_item[0])
+    for item in item_list:
+        if include_expected_create_response_code is not None and item[1] == include_expected_create_response_code: # extract only included
+            result.append(item[0])
+        if exclude_expected_create_response_code is not None and item[1] != exclude_expected_create_response_code: # extract only not excluded
+            result.append(item[0])
         if include_expected_create_response_code is None and exclude_expected_create_response_code is None:  # extract every posting
-            result.append(inner_item[0])
+            result.append(item[0])
     return result
 
 
 @keyword
-def compare_expected_vs_observed_create_response_codes(admin_doing_create_with_parameters):
-    all_expected_vs_observed_create_response_codes_match = True
-    for item in admin_doing_create_with_parameters:
+def compare_expected_vs_observed_create_response_codes(item_list):
+    all_expected_vs_observed_response_codes_match = True
+    for item in item_list:
         if item[1] == item[2]:  # expected create response code == observed_create_response_code
-            logger.info(f"Test passed: Posting {item[0]}, expected & observed create response code: {item[1]}")
+            logger.info(f"Test passed: Item {item[0]}, expected & observed create response code: {item[1]}")
         else:
-            logger.error(f"Test failed: Posting {item[0]}, expected create response code: {item[1]}, observed create response code: {item[2]}")
-            all_expected_vs_observed_create_response_codes_match = False
-    return all_expected_vs_observed_create_response_codes_match
+            logger.error(f"Test failed: Item {item[0]}, expected create response code: {item[1]}, observed create response code: {item[2]}")
+            all_expected_vs_observed_response_codes_match = False
+    return all_expected_vs_observed_response_codes_match
 
 
 def form_result(key_combination, original_request_headers):
@@ -242,3 +242,17 @@ def write_to_file(filename, source):
     else:
         f.write(str(source))
     f.close()
+
+
+@keyword
+def read_file_content(filename):
+    """
+    https://stackoverflow.com/questions/1894269/convert-string-representation-of-list-to-list
+    """
+    data_abs_path = get_path_to_data_folder()
+    sep = os.path.sep  # get os specific path seperator (either '\' for Windows or '/' for linux)
+    full_path_to_file = f'{data_abs_path}{sep}{filename}'
+    f = open(full_path_to_file, "r")
+    contents = f.read()
+    f.close()
+    return ast.literal_eval(contents)

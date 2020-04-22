@@ -219,20 +219,20 @@ All Create Responses Have Status Code "400-Bad Request
     Set Test Variable    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
 
 Each Posting In The List "DOING_CREATE_WITH_PARAMETERS" Is Attempted To Be Created
-    Make Post Requests And Store The Result Codes  admin_doing_create_with_parameters=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
+    Make Post Requests And Store The Result Codes  item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
     Log     ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
 
 Each Posting In The List "DOING_CREATE_WITH_PARAMETERS" Got Its Expected Create Response Code
-    ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  admin_doing_create_with_parameters=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
+    ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
     Should Be True  ${all_expected_vs_observed_create_response_codes_match}
 
 Only The Postings Having Expected Create Response Code "201-Created" Are Registered In The System
     "Registered Postings" Are Read
-    ${201_postings} =      Extract Postings     admin_doing_create_with_parameters=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]   include_expected_create_response_code=${201}
+    ${201_postings} =      Extract Postings     item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]   include_expected_create_response_code=${201}
     ${are_201_postings_registered} =      Is Subset   subset=${201_postings}     superset=${REGISTERED_POSTINGS}
     Should Be True  ${are_201_postings_registered}
 
-    ${everything_except_201_postings} =      Extract Postings     admin_doing_create_with_parameters=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]   exclude_expected_create_response_code=${201}
+    ${everything_except_201_postings} =      Extract Postings     item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]   exclude_expected_create_response_code=${201}
     Log     ${everything_except_201_postings}
     ${is_none_found} =      Is None Found   subset=${everything_except_201_postings}     superset=${REGISTERED_POSTINGS}
     Should Be True  ${is_none_found}
@@ -245,6 +245,15 @@ Multiple Read Requests Are Made With Different Headers
 
 Results Are Stored In "admin_read_requests_parameterized.txt"
     Write To File  filename=admin_read_requests_parameterized.txt  source=${RESULTS}
+
+Multiple Read Requests Are Made Based On "admin_read_requests_parameterized.txt"
+    ${READ_REQUESTS} =  Read File Content  filename=admin_read_requests_parameterized.txt
+    Make Multiple Get Requests With Different Headers   read_requests=${READ_REQUESTS}  # modifies ${READ_REQUESTS}
+    Set Test Variable   ${READ_REQUESTS}
+
+Observed Read Respond Codes Match Expected Read Respond Codes
+    ${all_expected_vs_observed_read_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  item_list=${READ_REQUESTS}
+    Should Be True  ${all_expected_vs_observed_read_response_codes_match}
 
 
 *** Test Cases ***
@@ -378,7 +387,7 @@ Attempting To Read Postings with Invalid URI
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
 
-############    POISED vs. CRUDO Tests #######################################################################################
+############    POISED-CRUDO Tests #######################################################################################
 Create Postings With Different Parameters
     [Tags]      admin-doing-create-with_parameters
     Given Postings In The List "DOING_CREATE_WITH_PARAMETERS" Must Not Be Registered In The System
@@ -392,3 +401,7 @@ Gather The Results of Several Read Requests With Different Headers
     When Multiple Read Requests Are Made With Different Headers
     Then Results Are Stored In "admin_read_requests_parameterized.txt"
 
+Make Several Read Requests With Different Headers
+    [Tags]      admin-doing-reads-with-different-request-headers
+    When Multiple Read Requests Are Made Based On "admin_read_requests_parameterized.txt"
+    Then Observed Read Respond Codes Match Expected Read Respond Codes
