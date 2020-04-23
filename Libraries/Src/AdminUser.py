@@ -1,6 +1,6 @@
 from LibraryLoader import LibraryLoader
 from robot.api.deco import keyword
-from Utilities import get_uri, get_csrfmiddlewaretoken, populate_request_headers
+from Utilities import get_uri, get_csrfmiddlewaretoken, populate_request_headers, update_requirements
 from robot.api import logger
 import requests
 from collections import ChainMap
@@ -153,12 +153,18 @@ class AdminUser:
                                  json=posting, cookies=self._additional_put_cookie_tabstyle)
 
     @keyword
-    def make_multiple_put_requests_with_different_headers(self, posting):
-        result = []
-        for put_headers_keys, put_headers_combination in populate_request_headers(self.get_final_put_request_headers(posting)):
-            put_response = self.make_put_request(posting, headers=put_headers_combination)
-            result.append([put_headers_keys, put_response.status_code])
-        return result
+    def make_multiple_put_requests_with_different_headers(self, posting, put_requirements=None):
+        if put_requirements:
+            for put_headers_keys, put_headers_combination in populate_request_headers(self.get_final_put_request_headers(posting)):
+                logger.info(put_headers_keys)
+                put_response = self.make_put_request(posting, headers=put_headers_combination)
+                update_requirements( requirements=put_requirements, headers_keys=put_headers_keys, observed_request_code = put_response.status_code )
+        else: # to create put_requirements
+            result = []
+            for put_headers_keys, put_headers_combination in populate_request_headers(self.get_final_put_request_headers(posting)):
+                put_response = self.make_put_request(posting, headers=put_headers_combination)
+                result.append([put_headers_keys, put_response.status_code])
+            return result
 
     def get_delete_forms_csrfmiddlewaretoken(self, posting):
         final_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])

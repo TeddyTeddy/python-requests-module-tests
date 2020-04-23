@@ -256,3 +256,12 @@ def read_file_content(filename):
     contents = f.read()
     f.close()
     return ast.literal_eval(contents)
+
+
+def update_requirements(requirements, headers_keys, observed_request_code):
+    for item in requirements:
+        if item[0] == headers_keys:
+            if len(item) == 3:
+                item.pop()
+            item.insert(2, observed_request_code)
+            break

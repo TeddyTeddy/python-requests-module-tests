@@ -263,6 +263,16 @@ Multiple Update Requests On "Random Target Posting" Resource Are Made With Diffe
 Results Are Stored In "admin_update_requests_parameterized.txt"
     Write To File  filename=admin_update_requests_parameterized.txt  source=${RESULTS}
 
+Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
+    ${PUT_REQUIREMENTS} =  Read File Content  filename=admin_update_requests_parameterized.txt
+    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}    put_requirements=${PUT_REQUIREMENTS}  # modifies ${PUT_REQUIREMENTS}
+    Set Test Variable   ${PUT_REQUIREMENTS}
+
+Observed Update Respond Codes Match Expected Update Respond Codes
+    ${all_expected_vs_observed_update_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  item_list=${PUT_REQUIREMENTS}
+    Should Be True  ${all_expected_vs_observed_update_response_codes_match}
+
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -423,3 +433,12 @@ Gather The Results of Several Update Requests With Different Headers
     When Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Results Are Stored In "admin_update_requests_parameterized.txt"
 
+Make Several Update Requests With Different Headers
+    [Tags]      admin-doing-update-with-different-request-headers
+    Given "Target Postings" Must Not Be Registered In The System
+    Given "Target Postings" Are Created
+    Given "Target Postings" Are Read
+    Given "Target Postings" Must Be Registered In The System
+    Given "Random Target Posting" Is Cached
+    When Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
+    Then Observed Update Respond Codes Match Expected Update Respond Codes
