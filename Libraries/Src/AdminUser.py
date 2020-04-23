@@ -138,33 +138,31 @@ class AdminUser:
         put_form_get_response = self._session.get(url=posting['url'], headers=final_get_request_headers)
         return get_csrfmiddlewaretoken(put_form_get_response.text)
 
-    def get_final_put_request_headers(self, posting):
+    def get_put_request_headers(self, posting):
         overwriting_put_request_headers = {'Referer':posting['url'], 'X-CSRFTOKEN':self.get_put_forms_csrfmiddlewaretoken(posting) }
         return ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
 
     @keyword
     def make_put_request(self, posting, headers=None):
-        if headers is not None:
+        if headers:
             final_put_request_headers = headers
         else:
-            final_put_request_headers = self.get_final_put_request_headers(posting)
+            final_put_request_headers = self.get_put_request_headers(posting)
 
-        return self._session.put(url=posting['url'], headers=final_put_request_headers,
-                                 json=posting, cookies=self._additional_put_cookie_tabstyle)
+        return self._session.put(url=posting['url'], headers=final_put_request_headers, json=posting, cookies=self._additional_put_cookie_tabstyle)
 
     @keyword
     def make_multiple_put_requests_with_different_headers(self, posting, put_requirements=None):
         if put_requirements:
-            for put_headers_keys, put_headers_combination in populate_request_headers(self.get_final_put_request_headers(posting)):
-                logger.info(put_headers_keys)
-                put_response = self.make_put_request(posting, headers=put_headers_combination)
+            for put_headers_keys, final_put_headers in populate_request_headers(self.get_put_request_headers(posting)):
+                put_response = self.make_put_request(posting, headers=final_put_headers)
                 update_requirements( requirements=put_requirements, headers_keys=put_headers_keys, observed_request_code = put_response.status_code )
-        else: # to create put_requirements
-            result = []
-            for put_headers_keys, put_headers_combination in populate_request_headers(self.get_final_put_request_headers(posting)):
-                put_response = self.make_put_request(posting, headers=put_headers_combination)
-                result.append([put_headers_keys, put_response.status_code])
-            return result
+        else: # this branch is to create put_requirements
+            put_requirements = []
+            for put_headers_keys, final_put_headers in populate_request_headers(self.get_put_request_headers(posting)):
+                put_response = self.make_put_request(posting, headers=final_put_headers)
+                put_requirements.append([put_headers_keys, put_response.status_code])
+            return put_requirements
 
     def get_delete_forms_csrfmiddlewaretoken(self, posting):
         final_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
