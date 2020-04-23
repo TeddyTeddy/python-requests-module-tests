@@ -178,12 +178,12 @@ class AdminUser:
         return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_delete_request_headers(posting))
 
     @keyword
-    def make_post_requests_and_store_the_result_codes(self, item_list):
-        for item in item_list:
-            post_response = self.make_post_request(posting=item[0], payload_encoding=None,  content_type_header=None)
-            if len(item) == 3:
-                item.pop()
-            item.insert(2, post_response.status_code)   # modifies item_list
+    def make_post_requests_and_store_the_result_codes(self, post_requirements):
+        for r in post_requirements:
+            post_response = self.make_post_request(posting=r[0], payload_encoding=None,  content_type_header=None)
+            if len(r) == 3:
+                r.pop()
+            r.insert(2, post_response.status_code)   # modifies post_requirements
 
 
 
