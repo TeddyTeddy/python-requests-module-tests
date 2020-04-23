@@ -221,10 +221,10 @@ def populate_request_headers(original_request_headers):
         # https://www.geeksforgeeks.org/permutation-and-combination-in-python/
         iterator = combinations(keys, length)  # a generator
         for key_combination in iterator:
-            yield form_result(key_combination, original_request_headers)
+            yield key_combination, form_result(key_combination, original_request_headers)
         length+=1
 
-    yield {}
+    yield (), {}   # repressents a key combination of length zero
 
 
 def get_path_to_data_folder():

@@ -256,6 +256,13 @@ Observed Read Respond Codes Match Expected Read Respond Codes
     Should Be True  ${all_expected_vs_observed_read_response_codes_match}
 
 
+Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
+    ${RESULTS} =    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}
+    Set Test Variable   @{RESULTS}
+
+Results Are Stored In "admin_update_requests_parameterized.txt"
+    Write To File  filename=admin_update_requests_parameterized.txt  source=${RESULTS}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -405,3 +412,14 @@ Make Several Read Requests With Different Headers
     [Tags]      admin-doing-reads-with-different-request-headers
     When Multiple Read Requests Are Made Based On "admin_read_requests_parameterized.txt"
     Then Observed Read Respond Codes Match Expected Read Respond Codes
+
+Gather The Results of Several Update Requests With Different Headers
+    [Tags]      requirements-gathering
+    Given "Target Postings" Must Not Be Registered In The System
+    Given "Target Postings" Are Created
+    Given "Target Postings" Are Read
+    Given "Target Postings" Must Be Registered In The System
+    Given "Random Target Posting" Is Cached
+    When Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
+    Then Results Are Stored In "admin_update_requests_parameterized.txt"
+

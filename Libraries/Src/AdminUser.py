@@ -122,7 +122,7 @@ class AdminUser:
     def make_multiple_get_requests_with_different_headers(self, read_requests=None):
         if read_requests is None:
             result = []
-            for get_headers_combination in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
+            for get_headers_keys, get_headers_combination in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
                 get_response = self.make_get_request(headers=get_headers_combination)
                 result.append([get_headers_combination, get_response.status_code])
             return result
@@ -143,9 +143,22 @@ class AdminUser:
         return ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
 
     @keyword
-    def make_put_request(self, posting):
-        return self._session.put(url=posting['url'], headers=self.get_final_put_request_headers(posting),
-                                json=posting, cookies=self._additional_put_cookie_tabstyle)
+    def make_put_request(self, posting, headers=None):
+        if headers is not None:
+            final_put_request_headers = headers
+        else:
+            final_put_request_headers = self.get_final_put_request_headers(posting)
+
+        return self._session.put(url=posting['url'], headers=final_put_request_headers,
+                                 json=posting, cookies=self._additional_put_cookie_tabstyle)
+
+    @keyword
+    def make_multiple_put_requests_with_different_headers(self, posting):
+        result = []
+        for put_headers_keys, put_headers_combination in populate_request_headers(self.get_final_put_request_headers(posting)):
+            put_response = self.make_put_request(posting, headers=put_headers_combination)
+            result.append([put_headers_keys, put_response.status_code])
+        return result
 
     def get_delete_forms_csrfmiddlewaretoken(self, posting):
         final_get_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])
