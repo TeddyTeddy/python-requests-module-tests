@@ -165,13 +165,13 @@ class AdminUser:
         delete_posting_form_get_response = self._session.get(url=posting['url'], headers=final_get_headers)
         return get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
 
-    def get_final_put_request_headers(self, posting):
+    def get_final_delete_request_headers(self, posting):
         overwriting_delete_headers = {'X-CSRFTOKEN': self.get_put_forms_csrfmiddlewaretoken(posting), 'Referer': posting['url'] }
         return ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
 
     @keyword
     def make_delete_request(self, posting):
-        return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_put_request_headers(posting))
+        return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_delete_request_headers(posting))
 
     @keyword
     def make_post_requests_and_store_the_result_codes(self, item_list):
