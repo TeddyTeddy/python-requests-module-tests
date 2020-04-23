@@ -119,19 +119,19 @@ class AdminUser:
         return self._session.get(url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
 
     @keyword
-    def make_multiple_get_requests_with_different_headers(self, read_requests=None):
-        if read_requests is None:
-            result = []
-            for get_headers_keys, get_headers_combination in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
-                get_response = self.make_get_request(headers=get_headers_combination)
-                result.append([get_headers_combination, get_response.status_code])
-            return result
-        else:
-            for item in read_requests:
-                get_response = self.make_get_request(headers=item[0])
-                if len(item) == 3:
-                    item.pop()
-                item.insert(2, get_response.status_code)  # modifies read_requests list
+    def make_multiple_get_requests_with_different_headers(self, get_requirements=None):
+        if get_requirements:
+            for r in get_requirements:
+                get_response = self.make_get_request(headers=r[0])
+                if len(r) == 3:
+                    r.pop()
+                r.insert(2, get_response.status_code)  # modifies get_requirements
+        else: # this is to create get_requirements
+            get_requirements = []
+            for get_headers_keys, final_get_headers in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
+                get_response = self.make_get_request(headers=final_get_headers)
+                get_requirements.append([final_get_headers, get_response.status_code])
+            return get_requirements
 
     def get_put_forms_csrfmiddlewaretoken(self, posting):
         final_get_request_headers = ChainMap({'Accept':self._accept_text_html_header}, self._admin['GET_REQUEST_HEADERS'])

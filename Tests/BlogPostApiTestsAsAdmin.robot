@@ -246,13 +246,13 @@ Multiple Read Requests Are Made With Different Headers
 Results Are Stored In "admin_read_requests_parameterized.txt"
     Write To File  filename=admin_read_requests_parameterized.txt  source=${RESULTS}
 
-Multiple Read Requests Are Made Based On "admin_read_requests_parameterized.txt"
-    ${READ_REQUESTS} =  Read File Content  filename=admin_read_requests_parameterized.txt
-    Make Multiple Get Requests With Different Headers   read_requests=${READ_REQUESTS}  # modifies ${READ_REQUESTS}
-    Set Test Variable   ${READ_REQUESTS}
+Multiple Read Requests Are Made Based On Requirements
+    ${GET_REQUIREMENTS} =  Read File Content  filename=admin_read_requests_parameterized.txt
+    Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
+    Set Test Variable   ${GET_REQUIREMENTS}
 
 Observed Read Respond Codes Match Expected Read Respond Codes
-    ${all_expected_vs_observed_read_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${READ_REQUESTS}
+    ${all_expected_vs_observed_read_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${GET_REQUIREMENTS}
     Should Be True  ${all_expected_vs_observed_read_response_codes_match}
 
 
@@ -420,7 +420,7 @@ Gather The Results of Several Read Requests With Different Headers
 
 Make Several Read Requests With Different Headers
     [Tags]      admin-doing-reads-with-different-request-headers
-    When Multiple Read Requests Are Made Based On "admin_read_requests_parameterized.txt"
+    When Multiple Read Requests Are Made Based On Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
 Gather The Results of Several Update Requests With Different Headers
