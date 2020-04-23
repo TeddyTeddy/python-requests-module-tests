@@ -192,13 +192,13 @@ def extract_postings(item_list, include_expected_create_response_code=None, excl
 
 
 @keyword
-def compare_expected_vs_observed_create_response_codes(item_list):
+def compare_expected_vs_observed_response_codes(requirements):
     all_expected_vs_observed_response_codes_match = True
-    for item in item_list:
-        if item[1] == item[2]:  # expected create response code == observed_create_response_code
-            logger.info(f"Test passed: Item {item[0]}, expected & observed create response code: {item[1]}")
+    for r in requirements:
+        if r[1] == r[2]:  # expected create response code == observed_create_response_code
+            logger.info(f"Test passed: Requirement {r[0]}, expected & observed create response code: {r[1]}")
         else:
-            logger.error(f"Test failed: Item {item[0]}, expected create response code: {item[1]}, observed create response code: {item[2]}")
+            logger.error(f"Test failed: Requirement {r[0]}, expected create response code: {r[1]}, observed create response code: {r[2]}")
             all_expected_vs_observed_response_codes_match = False
     return all_expected_vs_observed_response_codes_match
 

@@ -219,11 +219,11 @@ All Create Responses Have Status Code "400-Bad Request
     Set Test Variable    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
 
 Each Posting In The List "DOING_CREATE_WITH_PARAMETERS" Is Attempted To Be Created
-    Make Post Requests And Store The Result Codes  item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
+    Make Post Requests And Store The Result Codes  item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]  # modifies ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
     Log     ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
 
 Each Posting In The List "DOING_CREATE_WITH_PARAMETERS" Got Its Expected Create Response Code
-    ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
+    ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
     Should Be True  ${all_expected_vs_observed_create_response_codes_match}
 
 Only The Postings Having Expected Create Response Code "201-Created" Are Registered In The System
@@ -252,7 +252,7 @@ Multiple Read Requests Are Made Based On "admin_read_requests_parameterized.txt"
     Set Test Variable   ${READ_REQUESTS}
 
 Observed Read Respond Codes Match Expected Read Respond Codes
-    ${all_expected_vs_observed_read_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  item_list=${READ_REQUESTS}
+    ${all_expected_vs_observed_read_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${READ_REQUESTS}
     Should Be True  ${all_expected_vs_observed_read_response_codes_match}
 
 
@@ -269,7 +269,7 @@ Multiple Update Requests On "Random Target Posting" Resource Are Made According 
     Set Test Variable   ${PUT_REQUIREMENTS}
 
 Observed Update Respond Codes Match Expected Update Respond Codes
-    ${all_expected_vs_observed_update_response_codes_match} =  Compare Expected Vs Observed Create Response Codes  item_list=${PUT_REQUIREMENTS}
+    ${all_expected_vs_observed_update_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${PUT_REQUIREMENTS}
     Should Be True  ${all_expected_vs_observed_update_response_codes_match}
 
 
