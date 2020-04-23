@@ -238,12 +238,11 @@ Only The Postings Having Expected Create Response Code "201-Created" Are Registe
 
 
 Multiple Read Requests Are Made With Different Headers
-    ${RESULTS} =     Make Multiple Get Requests With Different Headers
-    Set Test Variable   @{RESULTS}
-    Log     ${RESULTS}
+    ${GET_REQUIREMENTS} =     Make Multiple Get Requests With Different Headers
+    Set Test Variable   @{GET_REQUIREMENTS}
 
 Results Are Stored In "admin_read_requests_parameterized.txt"
-    Write To File  filename=admin_read_requests_parameterized.txt  source=${RESULTS}
+    Write To File  filename=admin_read_requests_parameterized.txt  source=${GET_REQUIREMENTS}
 
 Multiple Read Requests Are Made Based On Requirements
     ${GET_REQUIREMENTS} =  Read File Content  filename=admin_read_requests_parameterized.txt
@@ -256,11 +255,11 @@ Observed Read Respond Codes Match Expected Read Respond Codes
 
 
 Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
-    ${RESULTS} =    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}
-    Set Test Variable   @{RESULTS}
+    ${PUT_REQUIREMENTS} =    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}
+    Set Test Variable   @{PUT_REQUIREMENTS}
 
 Results Are Stored In "admin_update_requests_parameterized.txt"
-    Write To File  filename=admin_update_requests_parameterized.txt  source=${RESULTS}
+    Write To File  filename=admin_update_requests_parameterized.txt  source=${PUT_REQUIREMENTS}
 
 Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
     ${PUT_REQUIREMENTS} =  Read File Content  filename=admin_update_requests_parameterized.txt
