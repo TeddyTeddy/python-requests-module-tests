@@ -203,7 +203,7 @@ def compare_expected_vs_observed_response_codes(requirements):
     return all_expected_vs_observed_response_codes_match
 
 
-def form_result(key_combination, original_request_headers):
+def form_headers(key_combination, original_request_headers):
     result = {}
     for key in key_combination:
         result[key] = original_request_headers[key]
@@ -221,7 +221,7 @@ def populate_request_headers(original_request_headers):
         # https://www.geeksforgeeks.org/permutation-and-combination-in-python/
         iterator = combinations(keys, length)  # a generator
         for key_combination in iterator:
-            yield key_combination, form_result(key_combination, original_request_headers)
+            yield key_combination, form_headers(key_combination, original_request_headers)
         length+=1
 
     yield (), {}   # repressents a key combination of length zero

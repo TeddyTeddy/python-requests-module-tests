@@ -270,6 +270,12 @@ Observed Update Respond Codes Match Expected Update Respond Codes
     ${all_expected_vs_observed_update_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${PUT_REQUIREMENTS}
     Should Be True  ${all_expected_vs_observed_update_response_codes_match}
 
+Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
+    ${DELETE_REQUIREMENTS} =     Make Multiple Delete Requests With Different Headers     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
+    Set Test Variable   @{DELETE_REQUIREMENTS}
+
+Results Are Stored In "admin_delete_requests_parameterized.txt"
+    Write To File  filename=admin_delete_requests_parameterized.txt  source=${DELETE_REQUIREMENTS}
 
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
@@ -440,3 +446,8 @@ Make Several Update Requests With Different Headers
     Given "Random Target Posting" Is Cached
     When Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Update Respond Codes Match Expected Update Respond Codes
+
+Gather The Results of Several Delete Requests With Different Headers
+    [Tags]      requirements-gathering
+    When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
+    Then Results Are Stored In "admin_delete_requests_parameterized.txt"

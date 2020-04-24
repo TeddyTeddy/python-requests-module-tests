@@ -1,6 +1,6 @@
 from LibraryLoader import LibraryLoader
 from robot.api.deco import keyword
-from Utilities import get_uri, get_csrfmiddlewaretoken, populate_request_headers, update_requirements
+from Utilities import get_uri, get_csrfmiddlewaretoken, populate_request_headers, update_requirements, form_headers
 from robot.api import logger
 import requests
 from collections import ChainMap
@@ -169,13 +169,18 @@ class AdminUser:
         delete_posting_form_get_response = self._session.get(url=posting['url'], headers=final_get_headers)
         return get_csrfmiddlewaretoken(delete_posting_form_get_response.text)
 
-    def get_final_delete_request_headers(self, posting):
+    def get_delete_request_headers(self, posting):
         overwriting_delete_headers = {'X-CSRFTOKEN': self.get_put_forms_csrfmiddlewaretoken(posting), 'Referer': posting['url'] }
         return ChainMap( overwriting_delete_headers, self._admin['DELETE_REQUEST_HEADERS'] )
 
     @keyword
-    def make_delete_request(self, posting):
-        return self._session.delete(url=posting['url'], data=posting, headers=self.get_final_delete_request_headers(posting))
+    def make_delete_request(self, posting, delete_headers=None):
+        if delete_headers:
+            final_delete_headers = delete_headers
+        else:
+            final_delete_headers = self.get_delete_request_headers(posting)
+
+        return self._session.delete(url=posting['url'], data=posting, headers=final_delete_headers)  # 'data': pass posting resource as a form
 
     @keyword
     def make_post_requests_and_store_the_result_codes(self, post_requirements):
@@ -184,6 +189,30 @@ class AdminUser:
             if len(r) == 3:
                 r.pop()
             r.insert(2, post_response.status_code)   # modifies post_requirements
+
+    @keyword
+    def make_multiple_delete_requests_with_different_headers(self, target_posting):
+        posting_to_delete_exists = False
+        delete_requirements = []
+        for delete_headers_key_combo, ignored_delete_headers in populate_request_headers(self._admin['DELETE_REQUEST_HEADERS']):
+            if not posting_to_delete_exists:
+                # create a posting, and store it as posting_to_delete
+                post_response = self.make_post_request(target_posting, payload_encoding=None,  content_type_header=None)
+                assert post_response.status_code == 201  # Created
+                posting_to_delete = post_response.json()
+
+            final_delete_headers = form_headers(delete_headers_key_combo, self.get_delete_request_headers(posting_to_delete))
+            # attempt to make delete request with final_delete_headers
+            delete_response = self.make_delete_request(posting=posting_to_delete, delete_headers=final_delete_headers)
+            delete_requirements.append([delete_headers_key_combo, delete_response.status_code])
+
+            # if the delete attempt did not work, posting_to_delete still exists in the system
+            posting_to_delete_exists = delete_response.status_code != 200
+
+        return delete_requirements
+
+
+
 
 
 
