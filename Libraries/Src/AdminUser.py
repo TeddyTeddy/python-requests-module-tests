@@ -190,26 +190,44 @@ class AdminUser:
                 r.pop()
             r.insert(2, post_response.status_code)   # modifies post_requirements
 
+    def _create_posting(self, target_posting):
+        post_response = self.make_post_request(target_posting, payload_encoding=None,  content_type_header=None)
+        logger.info('POSTING ATTEMPTED TO BE CREATED:')
+        logger.info(post_response.status_code)
+        logger.info(post_response.request.headers)
+        logger.info(post_response.request.body)
+        assert post_response.status_code == 201  # Created
+        return post_response.json()
+
     @keyword
-    def make_multiple_delete_requests_with_different_headers(self, target_posting):
-        posting_to_delete_exists = False
-        delete_requirements = []
-        for delete_headers_key_combo, ignored_delete_headers in populate_request_headers(self._admin['DELETE_REQUEST_HEADERS']):
-            if not posting_to_delete_exists:
-                # create a posting, and store it as posting_to_delete
-                post_response = self.make_post_request(target_posting, payload_encoding=None,  content_type_header=None)
-                assert post_response.status_code == 201  # Created
-                posting_to_delete = post_response.json()
+    def make_multiple_delete_requests_with_different_headers(self, target_posting, delete_requirements=None):
+        if delete_requirements:
+            posting_to_delete_exists = False
+            for r in delete_requirements:
+                if not posting_to_delete_exists:
+                    posting_to_delete = self._create_posting(target_posting)
+                final_delete_headers = form_headers(r[0], self.get_delete_request_headers(posting_to_delete))
+                # attempt to make delete request with final_delete_headers
+                delete_response = self.make_delete_request(posting=posting_to_delete, delete_headers=final_delete_headers)
+                update_requirements(requirements=delete_requirements, headers_keys=r[0], observed_request_code=delete_response.status_code)
+                posting_to_delete_exists = not (300 > delete_response.status_code >= 200)
 
-            final_delete_headers = form_headers(delete_headers_key_combo, self.get_delete_request_headers(posting_to_delete))
-            # attempt to make delete request with final_delete_headers
-            delete_response = self.make_delete_request(posting=posting_to_delete, delete_headers=final_delete_headers)
-            delete_requirements.append([delete_headers_key_combo, delete_response.status_code])
+        else: # this branch is to create delete_requirements
+            posting_to_delete_exists = False
+            delete_requirements = []
+            for delete_headers_key_combo, ignored_delete_headers in populate_request_headers(self._admin['DELETE_REQUEST_HEADERS']):
+                if not posting_to_delete_exists:
+                    posting_to_delete = self._create_posting(target_posting)
 
-            # if the delete attempt did not work, posting_to_delete still exists in the system
-            posting_to_delete_exists = delete_response.status_code != 200
+                final_delete_headers = form_headers(delete_headers_key_combo, self.get_delete_request_headers(posting_to_delete))
+                # attempt to make delete request with final_delete_headers
+                delete_response = self.make_delete_request(posting=posting_to_delete, delete_headers=final_delete_headers)
+                delete_requirements.append([delete_headers_key_combo, delete_response.status_code])
 
-        return delete_requirements
+                # if the delete attempt did not work, posting_to_delete must still exist in the system
+                posting_to_delete_exists = not (300 > delete_response.status_code >= 200)
+
+            return delete_requirements
 
 
 

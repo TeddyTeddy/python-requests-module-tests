@@ -277,6 +277,15 @@ Multiple Delete Requests On "Random Target Posting" Resource Are Made With Diffe
 Results Are Stored In "admin_delete_requests_parameterized.txt"
     Write To File  filename=admin_delete_requests_parameterized.txt  source=${DELETE_REQUIREMENTS}
 
+Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
+    ${DELETE_REQUIREMENTS} =  Read File Content  filename=admin_delete_requests_parameterized.txt
+    Make Multiple Delete Requests With Different Headers   target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]    delete_requirements=${DELETE_REQUIREMENTS}  # modifies ${DELETE_REQUIREMENTS}
+    Set Test Variable   ${DELETE_REQUIREMENTS}
+
+Observed Delete Respond Codes Match Expected Delete Respond Codes
+    ${all_expected_vs_observed_delete_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${DELETE_REQUIREMENTS}
+    Should Be True  ${all_expected_vs_observed_delete_response_codes_match}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -451,3 +460,8 @@ Gather The Results of Several Delete Requests With Different Headers
     [Tags]      requirements-gathering
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Results Are Stored In "admin_delete_requests_parameterized.txt"
+
+Make Several Delete Requests With Different Headers
+    [Tags]      admin-doing-delete-with-different-request-headers
+    When Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
+    Then Observed Delete Respond Codes Match Expected Delete Respond Codes

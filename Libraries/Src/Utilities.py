@@ -196,9 +196,9 @@ def compare_expected_vs_observed_response_codes(requirements):
     all_expected_vs_observed_response_codes_match = True
     for r in requirements:
         if r[1] == r[2]:  # expected create response code == observed_create_response_code
-            logger.info(f"Test passed: Requirement {r[0]}, expected & observed create response code: {r[1]}")
+            logger.info(f"Test passed: Requirement ({r[0]} with expected & observed create response code: {r[1]})")
         else:
-            logger.error(f"Test failed: Requirement {r[0]}, expected create response code: {r[1]}, observed create response code: {r[2]}")
+            logger.error(f"Test failed: Requirement ({r[0]} with expected create response code: {r[1]}) but observed create response code: {r[2]}")
             all_expected_vs_observed_response_codes_match = False
     return all_expected_vs_observed_response_codes_match
 
