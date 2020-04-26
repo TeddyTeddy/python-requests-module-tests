@@ -79,7 +79,7 @@ class AdminUser:
         if options_requirements:
             for r in options_requirements:
                 options_response = self.make_options_request(headers=r[0])
-                update_requirements( requirements=options_requirements, headers_keys=r[0], observed_request_code = options_response.status_code )
+                update_requirements( requirements=options_requirements, headers_keys=r[0], observed_response_code = options_response.status_code )
         else: # this branch is to create options_requirements
             options_requirements = []
             for options_headers_keys_combo, final_options_headers in populate_request_headers(self._admin['OPTIONS_REQUEST_HEADERS']):
@@ -139,7 +139,7 @@ class AdminUser:
         if get_requirements:
             for r in get_requirements:
                 get_response = self.make_get_request(headers=r[0])
-                update_requirements( requirements=get_requirements, headers_keys=r[0], observed_request_code= get_response.status_code) # modifies get_requirements
+                update_requirements( requirements=get_requirements, headers_keys=r[0], observed_response_code= get_response.status_code) # modifies get_requirements
         else: # this is to create get_requirements
             get_requirements = []
             for get_headers_keys, final_get_headers in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
@@ -170,7 +170,7 @@ class AdminUser:
         if put_requirements:
             for put_headers_keys, final_put_headers in populate_request_headers(self.get_put_request_headers(posting)):
                 put_response = self.make_put_request(posting, headers=final_put_headers)
-                update_requirements( requirements=put_requirements, headers_keys=put_headers_keys, observed_request_code = put_response.status_code )
+                update_requirements( requirements=put_requirements, headers_keys=put_headers_keys, observed_response_code = put_response.status_code )
         else: # this branch is to create put_requirements
             put_requirements = []
             for put_headers_keys, final_put_headers in populate_request_headers(self.get_put_request_headers(posting)):
@@ -200,7 +200,7 @@ class AdminUser:
     def make_post_requests_and_store_the_result_codes(self, post_requirements):
         for r in post_requirements:
             post_response = self.make_post_request(posting=r[0], payload_encoding=None,  content_type_header=None)
-            update_requirements( requirements=post_requirements, headers_keys=r[0], observed_request_code=post_response.status_code)
+            update_requirements( requirements=post_requirements, headers_keys=r[0], observed_response_code=post_response.status_code)
 
     def _create_posting(self, target_posting):
         post_response = self.make_post_request(target_posting, payload_encoding=None,  content_type_header=None)
@@ -217,7 +217,7 @@ class AdminUser:
                 final_delete_headers = form_headers(r[0], self.get_delete_request_headers(posting_to_delete))
                 # attempt to make delete request with final_delete_headers
                 delete_response = self.make_delete_request(posting=posting_to_delete, delete_headers=final_delete_headers)
-                update_requirements(requirements=delete_requirements, headers_keys=r[0], observed_request_code=delete_response.status_code)
+                update_requirements(requirements=delete_requirements, headers_keys=r[0], observed_response_code=delete_response.status_code)
                 posting_to_delete_exists = not (300 > delete_response.status_code >= 200)
 
         else: # this branch is to create delete_requirements
