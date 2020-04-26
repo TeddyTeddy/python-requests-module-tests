@@ -139,9 +139,7 @@ class AdminUser:
         if get_requirements:
             for r in get_requirements:
                 get_response = self.make_get_request(headers=r[0])
-                if len(r) == 3:
-                    r.pop()
-                r.insert(2, get_response.status_code)  # modifies get_requirements
+                update_requirements( requirements=get_requirements, headers_keys=r[0], observed_request_code= get_response.status_code) # modifies get_requirements
         else: # this is to create get_requirements
             get_requirements = []
             for get_headers_keys, final_get_headers in populate_request_headers(self._admin['GET_REQUEST_HEADERS']):
