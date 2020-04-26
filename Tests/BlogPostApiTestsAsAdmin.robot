@@ -244,15 +244,6 @@ Multiple Read Requests Are Made With Different Headers
 Read Results Are Stored In Requirements File
     Write To File  filename=${ADMIN_READ_REQUIREMENTS_FILE}  source=${GET_REQUIREMENTS}
 
-Multiple Options Requests Are Made Based On Requirements
-    ${OPTIONS_REQUIREMENTS} =  Read File Content  filename=admin_options_requests_parameterized.txt
-    Make Multiple Options Requests With Different Headers   options_requirements=${OPTIONS_REQUIREMENTS}  # modifies ${OPTIONS_REQUIREMENTS}
-    Set Test Variable   ${OPTIONS_REQUIREMENTS}
-
-Observed Options Respond Codes Match Expected Options Respond Codes
-    ${all_expected_vs_observed_options_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${OPTIONS_REQUIREMENTS}
-    Should Be True  ${all_expected_vs_observed_options_response_codes_match}
-
 Multiple Read Requests Are Made Based On Read Requirements
     ${GET_REQUIREMENTS} =  Read File Content  filename=${ADMIN_READ_REQUIREMENTS_FILE}
     Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
@@ -299,8 +290,17 @@ Multiple Options Requests Are Made With Different Headers
     ${OPTIONS_REQUIREMENTS} =     Make Multiple Options Requests With Different Headers
     Set Test Variable   @{OPTIONS_REQUIREMENTS}
 
-Results Are Stored In "admin_options_requests_parameterized.txt"
-    Write To File  filename=admin_options_requests_parameterized.txt  source=${OPTIONS_REQUIREMENTS}
+Multiple Options Requests Are Made Based On Requirements
+    ${OPTIONS_REQUIREMENTS} =  Read File Content  filename=${ADMIN_OPTIONS_REQUIREMENTS_FILE}
+    Make Multiple Options Requests With Different Headers   options_requirements=${OPTIONS_REQUIREMENTS}  # modifies ${OPTIONS_REQUIREMENTS}
+    Set Test Variable   ${OPTIONS_REQUIREMENTS}
+
+Observed Options Respond Codes Match Expected Options Respond Codes
+    ${all_expected_vs_observed_options_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${OPTIONS_REQUIREMENTS}
+    Should Be True  ${all_expected_vs_observed_options_response_codes_match}
+
+Options Results Are Stored In Requirements File
+    Write To File  filename=${ADMIN_OPTIONS_REQUIREMENTS_FILE}  source=${OPTIONS_REQUIREMENTS}
 
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
@@ -483,9 +483,9 @@ Make Several Delete Requests With Different Headers
     Then Observed Delete Respond Codes Match Expected Delete Respond Codes
 
 Gather The Results of Several Options Requests With Different Headers
-    [Tags]      requirements-gathering
+    [Tags]      requirements-gathering      admin-options-requirements
     When Multiple Options Requests Are Made With Different Headers
-    Then Results Are Stored In "admin_options_requests_parameterized.txt"
+    Then Options Results Are Stored In Requirements File
 
 Make Several Options Requests With Different Headers
     [Tags]      admin-doing-options-with-different-request-headers

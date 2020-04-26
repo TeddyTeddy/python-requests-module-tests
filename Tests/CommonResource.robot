@@ -13,6 +13,7 @@ ${TARGET_POSTINGS}          A list of complete postings (i.e. complete: all fiel
 ${ADMIN_READ_REQUIREMENTS_FILE}          admin_read_requirements.txt
 ${ADMIN_UPDATE_REQUIREMENTS_FILE}        admin_update_requirements.txt
 ${ADMIN_DELETE_REQUIREMENTS_FILE}        admin_delete_requirements.txt
+${ADMIN_OPTIONS_REQUIREMENTS_FILE}       admin_options_requirements.txt
 
 *** Keywords ***
 "Registered Postings" Must Comply With "Posting Spec"
