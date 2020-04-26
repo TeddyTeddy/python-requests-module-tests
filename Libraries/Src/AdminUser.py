@@ -204,10 +204,6 @@ class AdminUser:
 
     def _create_posting(self, target_posting):
         post_response = self.make_post_request(target_posting, payload_encoding=None,  content_type_header=None)
-        logger.info('POSTING ATTEMPTED TO BE CREATED:')
-        logger.info(post_response.status_code)
-        logger.info(post_response.request.headers)
-        logger.info(post_response.request.body)
         assert post_response.status_code == 201  # Created
         return post_response.json()
 
