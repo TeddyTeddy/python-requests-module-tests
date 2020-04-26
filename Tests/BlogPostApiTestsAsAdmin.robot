@@ -267,11 +267,11 @@ Multiple Update Requests On "Random Target Posting" Resource Are Made With Diffe
     ${PUT_REQUIREMENTS} =    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}
     Set Test Variable   @{PUT_REQUIREMENTS}
 
-Results Are Stored In "admin_update_requests_parameterized.txt"
-    Write To File  filename=admin_update_requests_parameterized.txt  source=${PUT_REQUIREMENTS}
+Update Results Are Stored In Requirements File
+    Write To File  filename=${ADMIN_UPDATE_REQUIREMENTS_FILE}  source=${PUT_REQUIREMENTS}
 
 Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
-    ${PUT_REQUIREMENTS} =  Read File Content  filename=admin_update_requests_parameterized.txt
+    ${PUT_REQUIREMENTS} =  Read File Content  filename=${ADMIN_UPDATE_REQUIREMENTS_FILE}
     Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}    put_requirements=${PUT_REQUIREMENTS}  # modifies ${PUT_REQUIREMENTS}
     Set Test Variable   ${PUT_REQUIREMENTS}
 
@@ -453,14 +453,14 @@ Make Several Read Requests With Different Headers
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
 Gather The Results of Several Update Requests With Different Headers
-    [Tags]      requirements-gathering
+    [Tags]      requirements-gathering      admin-update-requirements
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
     Given "Target Postings" Must Be Registered In The System
     Given "Random Target Posting" Is Cached
     When Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
-    Then Results Are Stored In "admin_update_requests_parameterized.txt"
+    Then Update Results Are Stored In Requirements File
 
 Make Several Update Requests With Different Headers
     [Tags]      admin-doing-update-with-different-request-headers
