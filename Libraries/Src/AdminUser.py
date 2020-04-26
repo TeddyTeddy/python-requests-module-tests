@@ -68,8 +68,20 @@ class AdminUser:
         self._session.close()
 
     @keyword
-    def make_options_request(self):
-        return self._session.options(url=f'{self._api_base_url}{self._postings_uri}', headers=self._admin['OPTIONS_REQUEST_HEADERS'])
+    def make_options_request(self, headers=None):
+        if headers:
+            final_put_request_headers = headers
+        else:
+            final_put_request_headers = self._admin['OPTIONS_REQUEST_HEADERS']
+        return self._session.options(url=f'{self._api_base_url}{self._postings_uri}', headers=final_put_request_headers)
+
+    def make_multiple_options_requests_with_different_headers(self):
+        # this is to create options_requirements
+        options_requirements = []
+        for options_headers_keys_combo, final_options_headers in populate_request_headers(self._admin['OPTIONS_REQUEST_HEADERS']):
+            options_response = self.make_options_request(headers=final_options_headers)
+            options_requirements.append([final_options_headers, options_response.status_code])
+        return options_requirements
 
     @keyword
     def verify_options_response(self, options_response):

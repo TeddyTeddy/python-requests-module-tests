@@ -286,6 +286,13 @@ Observed Delete Respond Codes Match Expected Delete Respond Codes
     ${all_expected_vs_observed_delete_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${DELETE_REQUIREMENTS}
     Should Be True  ${all_expected_vs_observed_delete_response_codes_match}
 
+Multiple Options Requests Are Made With Different Headers
+    ${OPTIONS_REQUIREMENTS} =     Make Multiple Options Requests With Different Headers
+    Set Test Variable   @{OPTIONS_REQUIREMENTS}
+
+Results Are Stored In "admin_options_requests_parameterized.txt"
+    Write To File  filename=admin_options_requests_parameterized.txt  source=${OPTIONS_REQUIREMENTS}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -465,3 +472,8 @@ Make Several Delete Requests With Different Headers
     [Tags]      admin-doing-delete-with-different-request-headers
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Delete Respond Codes Match Expected Delete Respond Codes
+
+Gather The Results of Several Options Requests With Different Headers
+    [Tags]      requirements-gathering
+    When Multiple Options Requests Are Made With Different Headers
+    Then Results Are Stored In "admin_options_requests_parameterized.txt"
