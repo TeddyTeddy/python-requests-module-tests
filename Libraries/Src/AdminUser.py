@@ -75,13 +75,17 @@ class AdminUser:
             final_put_request_headers = self._admin['OPTIONS_REQUEST_HEADERS']
         return self._session.options(url=f'{self._api_base_url}{self._postings_uri}', headers=final_put_request_headers)
 
-    def make_multiple_options_requests_with_different_headers(self):
-        # this is to create options_requirements
-        options_requirements = []
-        for options_headers_keys_combo, final_options_headers in populate_request_headers(self._admin['OPTIONS_REQUEST_HEADERS']):
-            options_response = self.make_options_request(headers=final_options_headers)
-            options_requirements.append([final_options_headers, options_response.status_code])
-        return options_requirements
+    def make_multiple_options_requests_with_different_headers(self, options_requirements=None):
+        if options_requirements:
+            for r in options_requirements:
+                options_response = self.make_options_request(headers=r[0])
+                update_requirements( requirements=options_requirements, headers_keys=r[0], observed_request_code = options_response.status_code )
+        else: # this branch is to create options_requirements
+            options_requirements = []
+            for options_headers_keys_combo, final_options_headers in populate_request_headers(self._admin['OPTIONS_REQUEST_HEADERS']):
+                options_response = self.make_options_request(headers=final_options_headers)
+                options_requirements.append([final_options_headers, options_response.status_code])
+            return options_requirements
 
     @keyword
     def verify_options_response(self, options_response):

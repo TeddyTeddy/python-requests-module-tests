@@ -244,6 +244,15 @@ Multiple Read Requests Are Made With Different Headers
 Results Are Stored In "admin_read_requests_parameterized.txt"
     Write To File  filename=admin_read_requests_parameterized.txt  source=${GET_REQUIREMENTS}
 
+Multiple Options Requests Are Made Based On Requirements
+    ${OPTIONS_REQUIREMENTS} =  Read File Content  filename=admin_options_requests_parameterized.txt
+    Make Multiple Options Requests With Different Headers   options_requirements=${OPTIONS_REQUIREMENTS}  # modifies ${OPTIONS_REQUIREMENTS}
+    Set Test Variable   ${OPTIONS_REQUIREMENTS}
+
+Observed Options Respond Codes Match Expected Options Respond Codes
+    ${all_expected_vs_observed_options_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${OPTIONS_REQUIREMENTS}
+    Should Be True  ${all_expected_vs_observed_options_response_codes_match}
+
 Multiple Read Requests Are Made Based On Requirements
     ${GET_REQUIREMENTS} =  Read File Content  filename=admin_read_requests_parameterized.txt
     Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
@@ -477,3 +486,8 @@ Gather The Results of Several Options Requests With Different Headers
     [Tags]      requirements-gathering
     When Multiple Options Requests Are Made With Different Headers
     Then Results Are Stored In "admin_options_requests_parameterized.txt"
+
+Make Several Options Requests With Different Headers
+    [Tags]      admin-doing-options-with-different-request-headers
+    When Multiple Options Requests Are Made Based On Requirements
+    Then Observed Options Respond Codes Match Expected Options Respond Codes
