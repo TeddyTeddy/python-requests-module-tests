@@ -346,6 +346,11 @@ Deleting "Target Postings"
     Then Only "Pre-Set Postings" Are Left In The System
 
 Updating "Random Target Posting" With Missing "title" Field And Modified "content" Field
+    [Documentation]     Note that title & content are required fields in a create request.
+    ...                 This might suggest that title & content can also be required fields in an update request.
+    ...                 Currently, this test verifies that posting with partial content can be used in an update request.
+    ...                 This might or might not be the desired behaviour.
+    ...                 TODO: Clarify the desired behaviour.
     [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
@@ -359,6 +364,11 @@ Updating "Random Target Posting" With Missing "title" Field And Modified "conten
     Then "Random Target Posting" Must Be Registered In The System
 
 Updating "Random Target Posting" With Missing "content" Field And Modified "title" Field
+    [Documentation]     Note that title & content are required fields in a create request.
+    ...                 This might suggest that title & content can also be required fields in an update request.
+    ...                 Currently, this test verifies that posting with partial content can be used in an update request.
+    ...                 This might or might not be the desired behaviour.
+    ...                 TODO: Clarify the desired behaviour.
     [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
