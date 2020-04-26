@@ -71,14 +71,14 @@ def get_variables():
                         },
                         'title': {
                             'type': 'string',
-                            'required': False,
+                            'required': True,
                             'read_only': False,
                             'label': 'Title',
                             'max_length': 120
                         },
                         'content': {
                             'type': 'string',
-                            'required': False,
+                            'required': True,
                             'read_only': False,
                             'label': 'Content',
                             'max_length': 120
