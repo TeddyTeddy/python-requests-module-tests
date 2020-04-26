@@ -149,7 +149,7 @@ Only "Pre-Set Postings" Are Left In The System
     ${none_of_target_postings_found} =  Is None Found  subset=${INCOMPLETE_TARGET_POSTINGS}  superset=${REGISTERED_POSTINGS}
     Should Be True      ${none_of_target_postings_found}
 
-Pre-Defined Parameterized Postings Must Not Be Registered In The System
+"Parameterized Postings" Must Not Be Registered In The System
     "Registered Postings" Are Read
     ${PARAMETERIZED_POSTINGS} =     Extract Postings  ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
     Set Test Variable   ${PARAMETERIZED_POSTINGS}
@@ -218,14 +218,14 @@ All Create Responses Have Status Code "400-Bad Request
     END
     Set Test Variable    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
 
-Each Posting In Parameterized Postings Is Attempted To Be Created
+Each Posting In "Parameterized Postings" Is Attempted To Be Created
     Make Post Requests And Store The Result Codes  post_requirements=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]  # modifies ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
 
-Each Posting In Parameterized Postings Got Its Expected Create Response Code
+Each Posting In "Parameterized Postings" Got Its Expected Create Response Code
     ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
     Should Be True  ${all_expected_vs_observed_create_response_codes_match}
 
-Only The Postings Having Expected Create Response Code "201-Created" Are Registered In The System
+Only The Postings Having Expected Create Response Code "201-Created" Got Created In The System
     "Registered Postings" Are Read
     ${201_postings} =      Extract Postings     item_list=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]   include_expected_create_response_code=${201}
     ${are_201_postings_registered} =      Is Subset   subset=${201_postings}     superset=${REGISTERED_POSTINGS}
@@ -434,12 +434,12 @@ Attempting To Read Postings with Invalid URI
     Then Only "Pre-Set Postings" Are Left In The System
 
 ############    POISED-CRUDO Tests #######################################################################################
-Create Postings With Different Parameters
-    [Tags]      admin-doing-create-with_parameters
-    Given Pre-Defined Parameterized Postings Must Not Be Registered In The System
-    When Each Posting In Parameterized Postings Is Attempted To Be Created
-    Then Each Posting In Parameterized Postings Got Its Expected Create Response Code
-    Then Only The Postings Having Expected Create Response Code "201-Created" Are Registered In The System
+Create Postings With Different Items
+    [Tags]      admin-doing-create-with_parameters      parameters-being-items-in-posting
+    Given "Parameterized Postings" Must Not Be Registered In The System
+    When Each Posting In "Parameterized Postings" Is Attempted To Be Created
+    Then Each Posting In "Parameterized Postings" Got Its Expected Create Response Code
+    Then Only The Postings Having Expected Create Response Code "201-Created" Got Created In The System
     Then "Registered Postings" Must Comply With "Posting Spec"
 
 Gather The Results of Several Read Requests With Different Headers
