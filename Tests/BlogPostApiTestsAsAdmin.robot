@@ -283,11 +283,11 @@ Multiple Delete Requests On "Random Target Posting" Resource Are Made With Diffe
     ${DELETE_REQUIREMENTS} =     Make Multiple Delete Requests With Different Headers     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
     Set Test Variable   @{DELETE_REQUIREMENTS}
 
-Results Are Stored In "admin_delete_requests_parameterized.txt"
-    Write To File  filename=admin_delete_requests_parameterized.txt  source=${DELETE_REQUIREMENTS}
+Delete Results Are Stored In Requirements File
+    Write To File  filename=${ADMIN_DELETE_REQUIREMENTS_FILE}  source=${DELETE_REQUIREMENTS}
 
 Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
-    ${DELETE_REQUIREMENTS} =  Read File Content  filename=admin_delete_requests_parameterized.txt
+    ${DELETE_REQUIREMENTS} =  Read File Content  filename=${ADMIN_DELETE_REQUIREMENTS_FILE}
     Make Multiple Delete Requests With Different Headers   target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]    delete_requirements=${DELETE_REQUIREMENTS}  # modifies ${DELETE_REQUIREMENTS}
     Set Test Variable   ${DELETE_REQUIREMENTS}
 
@@ -473,9 +473,9 @@ Make Several Update Requests With Different Headers
     Then Observed Update Respond Codes Match Expected Update Respond Codes
 
 Gather The Results of Several Delete Requests With Different Headers
-    [Tags]      requirements-gathering
+    [Tags]      requirements-gathering      admin-delete-requirements
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
-    Then Results Are Stored In "admin_delete_requests_parameterized.txt"
+    Then Delete Results Are Stored In Requirements File
 
 Make Several Delete Requests With Different Headers
     [Tags]      admin-doing-delete-with-different-request-headers
