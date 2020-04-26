@@ -241,8 +241,8 @@ Multiple Read Requests Are Made With Different Headers
     ${GET_REQUIREMENTS} =     Make Multiple Get Requests With Different Headers
     Set Test Variable   @{GET_REQUIREMENTS}
 
-Results Are Stored In "admin_read_requests_parameterized.txt"
-    Write To File  filename=admin_read_requests_parameterized.txt  source=${GET_REQUIREMENTS}
+Read Results Are Stored In Requirements File
+    Write To File  filename=${ADMIN_READ_REQUIREMENTS_FILE}  source=${GET_REQUIREMENTS}
 
 Multiple Options Requests Are Made Based On Requirements
     ${OPTIONS_REQUIREMENTS} =  Read File Content  filename=admin_options_requests_parameterized.txt
@@ -253,8 +253,8 @@ Observed Options Respond Codes Match Expected Options Respond Codes
     ${all_expected_vs_observed_options_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${OPTIONS_REQUIREMENTS}
     Should Be True  ${all_expected_vs_observed_options_response_codes_match}
 
-Multiple Read Requests Are Made Based On Requirements
-    ${GET_REQUIREMENTS} =  Read File Content  filename=admin_read_requests_parameterized.txt
+Multiple Read Requests Are Made Based On Read Requirements
+    ${GET_REQUIREMENTS} =  Read File Content  filename=${ADMIN_READ_REQUIREMENTS_FILE}
     Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
     Set Test Variable   ${GET_REQUIREMENTS}
 
@@ -443,13 +443,13 @@ Create Postings With Different Items
     Then "Registered Postings" Must Comply With "Posting Spec"
 
 Gather The Results of Several Read Requests With Different Headers
-    [Tags]      requirements-gathering
+    [Tags]      requirements-gathering      admin-read-requirements
     When Multiple Read Requests Are Made With Different Headers
-    Then Results Are Stored In "admin_read_requests_parameterized.txt"
+    Then Read Results Are Stored In Requirements File
 
 Make Several Read Requests With Different Headers
     [Tags]      admin-doing-reads-with-different-request-headers
-    When Multiple Read Requests Are Made Based On Requirements
+    When Multiple Read Requests Are Made Based On Read Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
 Gather The Results of Several Update Requests With Different Headers
