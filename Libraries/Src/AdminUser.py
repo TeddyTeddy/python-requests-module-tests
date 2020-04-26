@@ -200,9 +200,7 @@ class AdminUser:
     def make_post_requests_and_store_the_result_codes(self, post_requirements):
         for r in post_requirements:
             post_response = self.make_post_request(posting=r[0], payload_encoding=None,  content_type_header=None)
-            if len(r) == 3:
-                r.pop()
-            r.insert(2, post_response.status_code)   # modifies post_requirements
+            update_requirements( requirements=post_requirements, headers_keys=r[0], observed_request_code=post_response.status_code)
 
     def _create_posting(self, target_posting):
         post_response = self.make_post_request(target_posting, payload_encoding=None,  content_type_header=None)
