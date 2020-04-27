@@ -337,8 +337,9 @@ Create Results Are Stored In Requirements File
     Write To File  filename=${ADMIN_CREATE_REQUIREMENTS_FILE}  source=${CREATE_REQUIREMENTS}
 
 Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
-    ${CREATE_REQUIREMENTS} =  Read File Content  filename=${ADMIN_CREATE_REQUIREMENTS_FILE}
-    Make Multiple Create Requests With Different Headers   target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]    create_requirements=${CREATE_REQUIREMENTS}  # modifies ${CREATE_REQUIREMENTS}
+    ${CREATE_REQUIREMENTS} =  Read File Content  filename=${ADMIN_CREATE_PARAMETERS_FILE}
+    Make Multiple Create Requests       target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
+    ...                                 create_requirements=${CREATE_REQUIREMENTS}  # modifies ${CREATE_REQUIREMENTS}
     Set Test Variable   ${CREATE_REQUIREMENTS}
 
 Observed Create Respond Codes Match Expected Create Respond Codes

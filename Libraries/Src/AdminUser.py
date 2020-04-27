@@ -255,7 +255,7 @@ class AdminUser:
             return delete_requirements
 
     @keyword
-    def make_multiple_create_requests_with_different_headers(self, posting_to_create, create_requirements=None):
+    def make_multiple_create_requests(self, posting_to_create, create_requirements=None):
         if create_requirements:
             posting_to_create_exists = False  # in the System Under Test
             for r in create_requirements:
