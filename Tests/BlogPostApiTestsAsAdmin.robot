@@ -551,7 +551,7 @@ Gathering Requirements : Admin Doing Several Update Requests With Different Head
     When Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Update Results Are Stored In Requirements File
 
-Make Several Update Requests With Different Headers
+Making Several Update Requests With Different Headers
     [Tags]      admin-parameters-CRUDO    admin-doing-update-with-different-request-headers
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
