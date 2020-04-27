@@ -509,7 +509,8 @@ Attempting To Read Postings with Invalid URI
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
 
-############    POISED-CRUDO Tests #######################################################################################
+############    A. POISED-CRUDO Tests #######################################################################################
+############    A.1 (P)arameters-CRUDO Tests
 Create Postings With Different Items
     [Tags]      admin-doing-create-with_parameters      parameters-being-items-in-posting
     Given "Parameterized Postings" Must Not Be Registered In The System
