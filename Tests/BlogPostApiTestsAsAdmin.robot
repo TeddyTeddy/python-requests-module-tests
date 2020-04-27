@@ -512,7 +512,7 @@ Attempting To Read Postings with Invalid URI
 ############    A. POISED-CRUDO Tests #######################################################################################
 ############    A.1 (P)arameters-CRUDO Tests
 Create Postings With Different Items
-    [Tags]      admin-doing-create-with_parameters      parameters-being-items-in-posting
+    [Tags]      admin-parameters-CRUDO    admin-doing-create-with_parameters      parameters-being-items-in-posting
     Given "Parameterized Postings" Must Not Be Registered In The System
     When Each Posting In "Parameterized Postings" Is Attempted To Be Created
     Then Each Posting In "Parameterized Postings" Got Its Expected Create Response Code
@@ -520,28 +520,28 @@ Create Postings With Different Items
     Then "Registered Postings" Must Comply With "Posting Spec"
 
 Gather The Results of Several Create Requests With Different Headers
-    [Tags]      requirements-gathering      admin-create-requirements
+    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-create-requirements
     Given "Target Postings" Must Not Be Registered In The System
     When Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Create Results Are Stored In Requirements File
 
 Make Several Create Requests With Different Headers
-    [Tags]      admin-doing-create-with-different-request-headers
+    [Tags]      admin-parameters-CRUDO    admin-doing-create-with-different-request-headers
     When Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Create Respond Codes Match Expected Create Respond Codes
 
 Gather The Results of Several Read Requests With Different Headers
-    [Tags]      requirements-gathering      admin-read-requirements
+    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-read-requirements
     When Multiple Read Requests Are Made With Different Headers
     Then Read Results Are Stored In Requirements File
 
 Make Several Read Requests With Different Headers
-    [Tags]      admin-doing-reads-with-different-request-headers
+    [Tags]      admin-parameters-CRUDO    admin-doing-reads-with-different-request-headers
     When Multiple Read Requests Are Made Based On Read Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
 Gather The Results of Several Update Requests With Different Headers
-    [Tags]      requirements-gathering      admin-update-requirements
+    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-update-requirements
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -551,7 +551,7 @@ Gather The Results of Several Update Requests With Different Headers
     Then Update Results Are Stored In Requirements File
 
 Make Several Update Requests With Different Headers
-    [Tags]      admin-doing-update-with-different-request-headers
+    [Tags]      admin-parameters-CRUDO    admin-doing-update-with-different-request-headers
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -561,22 +561,22 @@ Make Several Update Requests With Different Headers
     Then Observed Update Respond Codes Match Expected Update Respond Codes
 
 Gather The Results of Several Delete Requests With Different Headers
-    [Tags]      requirements-gathering      admin-delete-requirements
+    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-delete-requirements
     Given "Target Postings" Must Not Be Registered In The System
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Delete Results Are Stored In Requirements File
 
 Make Several Delete Requests With Different Headers
-    [Tags]      admin-doing-delete-with-different-request-headers
+    [Tags]      admin-parameters-CRUDO    admin-doing-delete-with-different-request-headers
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Delete Respond Codes Match Expected Delete Respond Codes
 
 Gather The Results of Several Options Requests With Different Headers
-    [Tags]      requirements-gathering      admin-options-requirements
+    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-options-requirements
     When Multiple Options Requests Are Made With Different Headers
     Then Options Results Are Stored In Requirements File
 
 Make Several Options Requests With Different Headers
-    [Tags]      admin-doing-options-with-different-request-headers
+    [Tags]      admin-parameters-CRUDO    admin-doing-options-with-different-request-headers
     When Multiple Options Requests Are Made Based On Requirements
     Then Observed Options Respond Codes Match Expected Options Respond Codes
