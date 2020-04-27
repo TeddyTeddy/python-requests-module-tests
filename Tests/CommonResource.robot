@@ -12,7 +12,7 @@ ${TARGET_POSTINGS}          A list of complete postings (i.e. complete: all fiel
 ...                         Obtained by subsetting ${REGISTERED_POSTINGS} with ${INCOMPLETE_TARGET_POSTINGS}
 ${ADMIN_READ_PARAMETERS_FILE}            admin_read_parameters.txt
 ${ADMIN_UPDATE_PARAMETERS_FILE}          admin_update_parameters.txt
-${ADMIN_DELETE_REQUIREMENTS_FILE}        admin_delete_requirements.txt
+${ADMIN_DELETE_PARAMETERS_FILE}          admin_delete_parameters.txt
 ${ADMIN_OPTIONS_REQUIREMENTS_FILE}       admin_options_requirements.txt
 ${ADMIN_CREATE_PARAMETERS_FILE}          admin_create_parameters.txt
 

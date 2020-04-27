@@ -293,15 +293,15 @@ Observed Update Respond Codes Match Expected Update Respond Codes
     Should Be True  ${all_expected_vs_observed_update_response_codes_match}
 
 Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
-    ${DELETE_REQUIREMENTS} =     Make Multiple Delete Requests With Different Headers     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
+    ${DELETE_REQUIREMENTS} =     Make Multiple Delete Requests     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
     Set Test Variable   @{DELETE_REQUIREMENTS}
 
 Delete Results Are Stored In Requirements File
-    Write To File  filename=${ADMIN_DELETE_REQUIREMENTS_FILE}  source=${DELETE_REQUIREMENTS}
+    Write To File  filename=${ADMIN_DELETE_PARAMETERS_FILE}  source=${DELETE_REQUIREMENTS}
 
 Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
-    ${DELETE_REQUIREMENTS} =  Read File Content  filename=${ADMIN_DELETE_REQUIREMENTS_FILE}
-    Make Multiple Delete Requests With Different Headers   target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]    delete_requirements=${DELETE_REQUIREMENTS}  # modifies ${DELETE_REQUIREMENTS}
+    ${DELETE_REQUIREMENTS} =  Read File Content  filename=${ADMIN_DELETE_PARAMETERS_FILE}
+    Make Multiple Delete Requests   target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]    delete_requirements=${DELETE_REQUIREMENTS}  # modifies ${DELETE_REQUIREMENTS}
     Set Test Variable   ${DELETE_REQUIREMENTS}
 
 Observed Delete Respond Codes Match Expected Delete Respond Codes
@@ -561,8 +561,8 @@ Making Several Update Requests With Different Headers
     When Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Update Respond Codes Match Expected Update Respond Codes
 
-Gather The Results of Several Delete Requests With Different Headers
-    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-delete-requirements
+Gathering Requirements : Admin Doing Several Delete Requests With Different Headers
+    [Tags]      requirements-gathering      admin-parameters-CRUDO      admin-delete-requirements
     Given "Target Postings" Must Not Be Registered In The System
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Delete Results Are Stored In Requirements File

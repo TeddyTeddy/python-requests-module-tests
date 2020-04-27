@@ -226,7 +226,7 @@ class AdminUser:
         return post_response.json()
 
     @keyword
-    def make_multiple_delete_requests_with_different_headers(self, target_posting, delete_requirements=None):
+    def make_multiple_delete_requests(self, target_posting, delete_requirements=None):
         if delete_requirements:
             posting_to_delete_exists = False
             for r in delete_requirements:
