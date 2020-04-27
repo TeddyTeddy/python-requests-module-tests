@@ -567,7 +567,7 @@ Gathering Requirements : Admin Doing Several Delete Requests With Different Head
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Delete Results Are Stored In Requirements File
 
-Make Several Delete Requests With Different Headers
+Making Several Delete Requests With Different Headers
     [Tags]      admin-parameters-CRUDO    admin-doing-delete-with-different-request-headers
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Delete Respond Codes Match Expected Delete Respond Codes
