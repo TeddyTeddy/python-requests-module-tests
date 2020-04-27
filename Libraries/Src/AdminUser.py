@@ -75,7 +75,7 @@ class AdminUser:
             final_put_request_headers = self._admin['OPTIONS_REQUEST_HEADERS']
         return self._session.options(url=f'{self._api_base_url}{self._postings_uri}', headers=final_put_request_headers)
 
-    def make_multiple_options_requests_with_different_headers(self, options_requirements=None):
+    def make_multiple_options_requests(self, options_requirements=None):
         if options_requirements:
             for r in options_requirements:
                 options_response = self.make_options_request(headers=r[0])

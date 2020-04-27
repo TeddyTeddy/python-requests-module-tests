@@ -309,12 +309,12 @@ Observed Delete Respond Codes Match Expected Delete Respond Codes
     Should Be True  ${all_expected_vs_observed_delete_response_codes_match}
 
 Multiple Options Requests Are Made With Different Headers
-    ${OPTIONS_REQUIREMENTS} =     Make Multiple Options Requests With Different Headers
+    ${OPTIONS_REQUIREMENTS} =     Make Multiple Options Requests
     Set Test Variable   @{OPTIONS_REQUIREMENTS}
 
 Multiple Options Requests Are Made Based On Requirements
-    ${OPTIONS_REQUIREMENTS} =  Read File Content  filename=${ADMIN_OPTIONS_REQUIREMENTS_FILE}
-    Make Multiple Options Requests With Different Headers   options_requirements=${OPTIONS_REQUIREMENTS}  # modifies ${OPTIONS_REQUIREMENTS}
+    ${OPTIONS_REQUIREMENTS} =  Read File Content  filename=${ADMIN_OPTIONS_PARAMETERS_FILE}
+    Make Multiple Options Requests   options_requirements=${OPTIONS_REQUIREMENTS}  # modifies ${OPTIONS_REQUIREMENTS}
     Set Test Variable   ${OPTIONS_REQUIREMENTS}
 
 Observed Options Respond Codes Match Expected Options Respond Codes
@@ -322,7 +322,7 @@ Observed Options Respond Codes Match Expected Options Respond Codes
     Should Be True  ${all_expected_vs_observed_options_response_codes_match}
 
 Options Results Are Stored In Requirements File
-    Write To File  filename=${ADMIN_OPTIONS_REQUIREMENTS_FILE}  source=${OPTIONS_REQUIREMENTS}
+    Write To File  filename=${ADMIN_OPTIONS_PARAMETERS_FILE}  source=${OPTIONS_REQUIREMENTS}
 
 "Target Postings" Must Not Have Been Updated
     @{TARGET_POSTINGS_B4_UPDATE_ATTEMPT} =   Copy List      ${TARGET_POSTINGS}
@@ -572,12 +572,12 @@ Making Several Delete Requests With Different Headers
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Delete Respond Codes Match Expected Delete Respond Codes
 
-Gather The Results of Several Options Requests With Different Headers
-    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-options-requirements
+Gathering Requirements : Admin Doing Several Options Requests With Different Headers
+    [Tags]      requirements-gathering      admin-parameters-CRUDO      admin-options-requirements
     When Multiple Options Requests Are Made With Different Headers
     Then Options Results Are Stored In Requirements File
 
-Make Several Options Requests With Different Headers
+Making Several Options Requests With Different Headers
     [Tags]      admin-parameters-CRUDO    admin-doing-options-with-different-request-headers
     When Multiple Options Requests Are Made Based On Requirements
     Then Observed Options Respond Codes Match Expected Options Respond Codes
