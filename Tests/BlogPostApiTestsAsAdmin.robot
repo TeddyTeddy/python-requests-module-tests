@@ -266,7 +266,7 @@ Multiple Read Requests Are Made With Different Headers
 Read Results Are Stored In Requirements File
     Write To File  filename=${ADMIN_READ_PARAMETERS_FILE}  source=${GET_REQUIREMENTS}
 
-Multiple Read Requests Are Made Based On Read Requirements
+Multiple Read Requests Are Made Based On Requirements
     ${GET_REQUIREMENTS} =  Read File Content  filename=${ADMIN_READ_PARAMETERS_FILE}
     Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
     Set Test Variable   ${GET_REQUIREMENTS}
@@ -536,9 +536,9 @@ Gathering Requirements : Admin Doing Several Read Requests With Different Header
     When Multiple Read Requests Are Made With Different Headers
     Then Read Results Are Stored In Requirements File
 
-Make Several Read Requests With Different Headers
+Making Several Read Requests With Different Headers
     [Tags]      admin-parameters-CRUDO    admin-doing-reads-with-different-request-headers
-    When Multiple Read Requests Are Made Based On Read Requirements
+    When Multiple Read Requests Are Made Based On Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
 Gather The Results of Several Update Requests With Different Headers
