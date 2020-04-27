@@ -348,17 +348,17 @@ Observed Create Respond Codes Match Expected Create Respond Codes
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
-    [Tags]              smoke-as-admin
+    [Tags]              BAT-as-admin    smoke-as-admin
     When BlogPostAPI Specification Is Queried
     Then BlogPostAPI Specification Is Correct
 
 Querying & Verifying Pre-Set Postings
-    [Tags]              smoke-as-admin
+    [Tags]              BAT-as-admin    smoke-as-admin
     When "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
 
 Creating "Target Postings"
-    [Tags]              CRUD-operations-as-admin    CRUD-success-as-admin
+    [Tags]              BAT-as-admin    CRUD-operations-as-admin    CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     When "Target Postings" Are Created
     Then "Registered Postings" Are Read
@@ -367,7 +367,7 @@ Creating "Target Postings"
     Then "Target Postings" Must Be Registered In The System
 
 Updating "Target Postings"
-    [Tags]                  CRUD-operations-as-admin    CRUD-success-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin    CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -378,7 +378,7 @@ Updating "Target Postings"
     Then "Target Postings" Must Have Been Updated In The System
 
 Deleting "Target Postings"
-    [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -394,7 +394,7 @@ Updating "Random Target Posting" With Missing "title" Field And Modified "conten
     ...                 Currently, this test verifies that posting with partial content can be used in an update request.
     ...                 This might or might not be the desired behaviour.
     ...                 TODO: Clarify the desired behaviour.
-    [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -412,7 +412,7 @@ Updating "Random Target Posting" With Missing "content" Field And Modified "titl
     ...                 Currently, this test verifies that posting with partial content can be used in an update request.
     ...                 This might or might not be the desired behaviour.
     ...                 TODO: Clarify the desired behaviour.
-    [Tags]                  CRUD-operations-as-admin     CRUD-success-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-success-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -427,7 +427,7 @@ Updating "Random Target Posting" With Missing "content" Field And Modified "titl
 #########################  NEGATIVE TESTS ################################################
 
 Attempting To Delete Non-Existing "Target Postings" Fails
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -437,7 +437,7 @@ Attempting To Delete Non-Existing "Target Postings" Fails
     Then All Delete Responses Have Status Code "404-Not Found"
 
 Attempting To Create Already Created "Target Postings" Fails
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -446,7 +446,7 @@ Attempting To Create Already Created "Target Postings" Fails
     Then All Create Responses Have Status Code "400-Bad Request"
 
 Attempting To Update "Non-Existing Postings" Fails
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -459,12 +459,12 @@ Attempting To Update "Non-Existing Postings" Fails
     Then Only "Pre-Set Postings" Are Left In The System
 
 Attempting To Read Postings with Invalid URI
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     When Bad Read Request Is Made With Invalid URI
     Then Read Response Should Be "404-Not Found"
 
 "Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     When "Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
     Then All Create Responses Have Status Code "400-Bad Request"
@@ -477,7 +477,7 @@ Attempting To Read Postings with Invalid URI
     [Documentation]     The system under test should not allow creation of a posting, which is JSON encoded in POST request
     ...                 and the POST request tells that "Content-Type" is Form. This test should be correct and the system
     ...                 under test must be changed.
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     When "Target Postings" Are Attempted To Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
     Then All Create Responses Have Status Code "400-Bad Request"
@@ -487,7 +487,7 @@ Attempting To Read Postings with Invalid URI
     Then Only "Pre-Set Postings" Are Left In The System
 
 "Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
     When "Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
@@ -500,7 +500,7 @@ Attempting To Read Postings with Invalid URI
     [Documentation]     The system under test should not allow update of a posting, which is JSON encoded in PUT request,
     ...                 and the PUT request tells that "Content-Type" is Form. This test should be correct and the system
     ...                 under test must be changed.
-    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
     When "Target Postings" Are Attempted To Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
