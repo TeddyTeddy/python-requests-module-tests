@@ -105,7 +105,7 @@ class AdminUser:
 
     # TODO: Change the keyword as create_posting and repeat the same for other keywords
     @keyword
-    def make_post_request(self, posting, payload_encoding,  content_type_header):
+    def make_post_request(self, posting, payload_encoding,  content_type_header, headers=None):
         if payload_encoding =='Form' and content_type_header == 'JSON':
             csrfmiddlewaretoken = self.get_post_forms_csrfmiddlewaretoken()
             post_form_data = ChainMap( {'csrfmiddlewaretoken': csrfmiddlewaretoken}, posting)
@@ -120,7 +120,13 @@ class AdminUser:
         else: # this is usual post request, no tricks
             csrfmiddlewaretoken = self.get_post_forms_csrfmiddlewaretoken()
             additional_post_request_headers = {'X-CSRFTOKEN':csrfmiddlewaretoken}
-            final_post_request_headers = ChainMap(additional_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
+            if headers:
+                if 'X-CSRFTOKEN' in headers:
+                    final_post_request_headers = ChainMap(additional_post_request_headers, headers)
+                else:
+                    final_post_request_headers = headers
+            else:
+                final_post_request_headers = ChainMap(additional_post_request_headers, self._admin['POST_REQUEST_HEADERS'])
 
             return self._session.post(url=f'{self._api_base_url}{self._postings_uri}', json=posting, headers=final_post_request_headers)
 
@@ -246,10 +252,28 @@ class AdminUser:
 
                 # if the delete attempt did not work, posting_to_delete must still exist in the system
                 posting_to_delete_exists = not (300 > delete_response.status_code >= 200)
-
             return delete_requirements
 
+    @keyword
+    def make_multiple_create_requests_with_different_headers(self, posting_to_create):
+        if False:
+            pass
+        else:
+            posting_to_create_exists = False  # in the System Under Test
+            create_requirements = []
+            for create_headers_key_combo, create_headers in populate_request_headers(self._admin['POST_REQUEST_HEADERS']):
+                if posting_to_create_exists: # API does not allow creating another posting with the same title; returns 400 if so
+                    delete_response = self.make_delete_request(posting_to_create)
+                    assert delete_response.status_code == 200
 
+                # attempt to make delete request with final_delete_headers
+                post_response = self.make_post_request(posting=posting_to_create, payload_encoding=None,
+                                                       content_type_header=None, headers=create_headers)
+                create_requirements.append([create_headers_key_combo, post_response.status_code])
+
+                # if the delete attempt did not work, posting_to_delete must still exist in the system
+                posting_to_create_exists = (300 > post_response.status_code >= 200)
+            return create_requirements
 
 
 

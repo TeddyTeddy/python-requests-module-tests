@@ -22,6 +22,7 @@ def get_variables():
             'POST_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Content-Type': 'application/json', # default value for creating a posting, can be overwritten by CONTENT_TYPE_IS_FORM_HEADER in ChainMap implementation
+                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from POST posting form				
                 'Accept': 'application/json',
                 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
             },

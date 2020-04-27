@@ -329,6 +329,13 @@ Options Results Are Stored In Requirements File
     "Target Postings" Are Read
     Should Be True      $TARGET_POSTINGS_B4_UPDATE_ATTEMPT==$TARGET_POSTINGS
 
+Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
+    ${CREATE_REQUIREMENTS} =     Make Multiple Create Requests With Different Headers     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
+    Set Test Variable   @{CREATE_REQUIREMENTS}
+
+Create Results Are Stored In Requirements File
+    Write To File  filename=${ADMIN_CREATE_REQUIREMENTS_FILE}  source=${CREATE_REQUIREMENTS}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -501,6 +508,12 @@ Create Postings With Different Items
     Then Each Posting In "Parameterized Postings" Got Its Expected Create Response Code
     Then Only The Postings Having Expected Create Response Code "201-Created" Got Created In The System
     Then "Registered Postings" Must Comply With "Posting Spec"
+
+Gather The Results of Several Create Requests With Different Headers
+    [Tags]      requirements-gathering      admin-create-requirements
+    Given "Target Postings" Must Not Be Registered In The System
+    When Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
+    Then Create Results Are Stored In Requirements File
 
 Gather The Results of Several Read Requests With Different Headers
     [Tags]      requirements-gathering      admin-read-requirements

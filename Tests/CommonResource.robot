@@ -14,6 +14,7 @@ ${ADMIN_READ_REQUIREMENTS_FILE}          admin_read_requirements.txt
 ${ADMIN_UPDATE_REQUIREMENTS_FILE}        admin_update_requirements.txt
 ${ADMIN_DELETE_REQUIREMENTS_FILE}        admin_delete_requirements.txt
 ${ADMIN_OPTIONS_REQUIREMENTS_FILE}       admin_options_requirements.txt
+${ADMIN_CREATE_REQUIREMENTS_FILE}        admin_create_requirements.txt
 
 *** Keywords ***
 "Registered Postings" Must Comply With "Posting Spec"
