@@ -547,6 +547,7 @@ Make Several Update Requests With Different Headers
 
 Gather The Results of Several Delete Requests With Different Headers
     [Tags]      requirements-gathering      admin-delete-requirements
+    Given "Target Postings" Must Not Be Registered In The System
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Delete Results Are Stored In Requirements File
 
