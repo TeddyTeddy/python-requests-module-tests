@@ -157,13 +157,25 @@ class AdminUser:
         return ChainMap( overwriting_put_request_headers, self._admin['PUT_REQUEST_HEADERS'] )
 
     @keyword
-    def make_put_request(self, posting, headers=None):
+    def make_put_request(self, posting, payload_encoding=None, content_type_header=None, headers=None):
         if headers:
             final_put_request_headers = headers
         else:
             final_put_request_headers = self.get_put_request_headers(posting)
 
-        return self._session.put(url=posting['url'], headers=final_put_request_headers, json=posting, cookies=self._additional_put_cookie_tabstyle)
+        if payload_encoding =='Form' and content_type_header == 'JSON':
+            csrfmiddlewaretoken = self.get_put_forms_csrfmiddlewaretoken(posting)
+            put_form_data = ChainMap( {'csrfmiddlewaretoken': csrfmiddlewaretoken}, posting)
+            # note that self._admin['PUT_REQUEST_HEADERS']['Content-Type'] is 'application/json'
+            return self._session.put(url=posting['url'], headers=final_put_request_headers, data=put_form_data, cookies=self._additional_put_cookie_tabstyle)
+        elif payload_encoding == 'JSON' and content_type_header == 'Form':
+            csrfmiddlewaretoken = self.get_put_forms_csrfmiddlewaretoken(posting)
+            overwriting_put_request_headers = { 'X-CSRFTOKEN':csrfmiddlewaretoken, 'Content-Type': self._content_type_is_form_header }
+            final_put_request_headers = ChainMap( overwriting_put_request_headers, final_put_request_headers )
+            # note that final_post_request_headers['Content-Type'] tells that payload is form encoded, but in fact payload is JSON as below
+            return self._session.put(url=posting['url'], headers=final_put_request_headers, json=posting, cookies=self._additional_put_cookie_tabstyle)
+        else:  # this is usual put request, no tricks
+            return self._session.put(url=posting['url'], headers=final_put_request_headers, json=posting, cookies=self._additional_put_cookie_tabstyle)
 
     @keyword
     def make_multiple_put_requests_with_different_headers(self, posting, put_requirements=None):

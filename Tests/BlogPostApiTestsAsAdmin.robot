@@ -93,8 +93,8 @@ Must Be Registered In The System
     Should Be True   ${is_subset}
 
 Update Posting
-    [Arguments]        ${posting}
-    ${PUT_RESPONSE} =   Make Put Request  posting=${posting}
+    [Arguments]        ${posting}       ${payload_encoding}=${None}   ${content_type_header}=${None}
+    ${PUT_RESPONSE} =   Make Put Request  posting=${posting}    payload_encoding=${payload_encoding}    content_type_header=${content_type_header}
     Set Test Variable   ${PUT_RESPONSE}
 
 
@@ -195,6 +195,28 @@ Bad Read Request Is Made With Invalid URI
 
 Read Response Should Be "404-Not Found"
     Should Be True   $GET_RESPONSE.status_code == 404
+
+"Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
+    # TODO: Consider to move the below logic to AdminUser.py
+    ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
+    FOR     ${p}    IN  @{TARGET_POSTINGS}
+        Update Posting     posting=${p}     payload_encoding=Form   content_type_header=JSON
+        ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_UPDATE_ATTEMPTS_FAILED_WITH_400 and $PUT_RESPONSE.status_code==400
+    END
+    Set Test Variable    ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400}
+
+All Update Responses Have Status Code "400-Bad Request"
+    Should Be True  ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400}
+
+"Target Postings" Are Attempted To Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
+    # TODO: Consider to move the below logic to AdminUser.py
+    ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
+    FOR     ${p}    IN  @{TARGET_POSTINGS}
+        Create Posting     posting=${p}     payload_encoding=JSON   content_type_header=Form
+        Log     ${POST_RESPONSE.status_code}
+        ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_UPDATE_ATTEMPTS_FAILED_WITH_400 and $POST_RESPONSE.status_code==400
+    END
+    Set Test Variable    ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400}
 
 "Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
     # TODO: Consider to move the below logic to AdminUser.py
@@ -301,6 +323,11 @@ Observed Options Respond Codes Match Expected Options Respond Codes
 
 Options Results Are Stored In Requirements File
     Write To File  filename=${ADMIN_OPTIONS_REQUIREMENTS_FILE}  source=${OPTIONS_REQUIREMENTS}
+
+"Target Postings" Must Not Have Been Updated
+    @{TARGET_POSTINGS_B4_UPDATE_ATTEMPT} =   Copy List      ${TARGET_POSTINGS}
+    "Target Postings" Are Read
+    Should Be True      $TARGET_POSTINGS_B4_UPDATE_ATTEMPT==$TARGET_POSTINGS
 
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
@@ -442,6 +469,29 @@ Attempting To Read Postings with Invalid URI
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
+
+"Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
+    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    Given "Target Postings" Are Created
+    Given "Target Postings" Are Read
+    When "Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
+    Then All Update Responses Have Status Code "400-Bad Request"
+    Then "Target Postings" Must Not Have Been Updated
+    Then "Registered Postings" Are Read
+    Then "Registered Postings" Must Comply With "Posting Spec"
+
+"Target Postings" Are Attempted To Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
+    [Documentation]     The system under test should not allow update of a posting, which is JSON encoded in PUT request,
+    ...                 and the PUT request tells that "Content-Type" is Form. This test should be correct and the system
+    ...                 under test must be changed.
+    [Tags]                  CRUD-operations-as-admin     CRUD-failure-as-admin
+    Given "Target Postings" Are Created
+    Given "Target Postings" Are Read
+    When "Target Postings" Are Attempted To Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
+    Then All Update Responses Have Status Code "400-Bad Request"
+    Then "Target Postings" Must Not Have Been Updated
+    Then "Registered Postings" Are Read
+    Then "Registered Postings" Must Comply With "Posting Spec"
 
 ############    POISED-CRUDO Tests #######################################################################################
 Create Postings With Different Items
