@@ -10,7 +10,7 @@ ${PRE_SET_POSTINGS}         A list of pre-existing postings in the system before
 ${RANDOM_TARGET_POSTING}    A dynamically picked target posting during test run. Set to None at the beginning & end of every test
 ${TARGET_POSTINGS}          A list of complete postings (i.e. complete: all fields present) \\n
 ...                         Obtained by subsetting ${REGISTERED_POSTINGS} with ${INCOMPLETE_TARGET_POSTINGS}
-${ADMIN_READ_REQUIREMENTS_FILE}          admin_read_requirements.txt
+${ADMIN_READ_PARAMETERS_FILE}            admin_read_parameters.txt
 ${ADMIN_UPDATE_REQUIREMENTS_FILE}        admin_update_requirements.txt
 ${ADMIN_DELETE_REQUIREMENTS_FILE}        admin_delete_requirements.txt
 ${ADMIN_OPTIONS_REQUIREMENTS_FILE}       admin_options_requirements.txt

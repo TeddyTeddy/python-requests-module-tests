@@ -264,10 +264,10 @@ Multiple Read Requests Are Made With Different Headers
     Set Test Variable   @{GET_REQUIREMENTS}
 
 Read Results Are Stored In Requirements File
-    Write To File  filename=${ADMIN_READ_REQUIREMENTS_FILE}  source=${GET_REQUIREMENTS}
+    Write To File  filename=${ADMIN_READ_PARAMETERS_FILE}  source=${GET_REQUIREMENTS}
 
 Multiple Read Requests Are Made Based On Read Requirements
-    ${GET_REQUIREMENTS} =  Read File Content  filename=${ADMIN_READ_REQUIREMENTS_FILE}
+    ${GET_REQUIREMENTS} =  Read File Content  filename=${ADMIN_READ_PARAMETERS_FILE}
     Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
     Set Test Variable   ${GET_REQUIREMENTS}
 
@@ -531,8 +531,8 @@ Making Several Create Requests With Different Headers
     When Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Create Respond Codes Match Expected Create Respond Codes
 
-Gather The Results of Several Read Requests With Different Headers
-    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-read-requirements
+Gathering Requirements : Admin Doing Several Read Requests With Different Headers
+    [Tags]      requirements-gathering      admin-parameters-CRUDO      admin-read-requirements     parametes-being-headers
     When Multiple Read Requests Are Made With Different Headers
     Then Read Results Are Stored In Requirements File
 
