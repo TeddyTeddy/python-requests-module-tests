@@ -215,7 +215,7 @@ class AdminUser:
         return self._session.delete(url=posting['url'], data=posting, headers=final_delete_headers)  # 'data': pass posting resource as a form
 
     @keyword
-    def make_post_requests_and_store_the_result_codes(self, post_requirements):
+    def make_post_requests(self, post_requirements):
         for r in post_requirements:
             post_response = self.make_post_request(posting=r[0], payload_encoding=None,  content_type_header=None)
             update_requirements( requirements=post_requirements, headers_keys=r[0], observed_response_code=post_response.status_code)

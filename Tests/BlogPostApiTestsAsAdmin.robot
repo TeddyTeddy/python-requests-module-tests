@@ -241,7 +241,7 @@ All Create Responses Have Status Code "400-Bad Request
     Set Test Variable    ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
 
 Each Posting In "Parameterized Postings" Is Attempted To Be Created
-    Make Post Requests And Store The Result Codes  post_requirements=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]  # modifies ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
+    Make Post Requests      post_requirements=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]  # modifies ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
 
 Each Posting In "Parameterized Postings" Got Its Expected Create Response Code
     ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
@@ -330,7 +330,7 @@ Options Results Are Stored In Requirements File
     Should Be True      $TARGET_POSTINGS_B4_UPDATE_ATTEMPT==$TARGET_POSTINGS
 
 Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
-    ${CREATE_REQUIREMENTS} =     Make Multiple Create Requests With Different Headers     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
+    ${CREATE_REQUIREMENTS} =     Make Multiple Create Requests     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
     Set Test Variable   @{CREATE_REQUIREMENTS}
 
 Create Results Are Stored In Requirements File
