@@ -141,7 +141,7 @@ class AdminUser:
         return self._session.get(url=f'{self._api_base_url}{self._invalid_postings_uri}', headers=self._admin['GET_REQUEST_HEADERS'])
 
     @keyword
-    def make_multiple_get_requests_with_different_headers(self, get_requirements=None):
+    def make_multiple_get_requests(self, get_requirements=None):
         if get_requirements:
             for r in get_requirements:
                 get_response = self.make_get_request(headers=r[0])

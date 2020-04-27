@@ -260,7 +260,7 @@ Only The Postings Having Expected Create Response Code "201-Created" Got Created
 
 
 Multiple Read Requests Are Made With Different Headers
-    ${GET_REQUIREMENTS} =     Make Multiple Get Requests With Different Headers
+    ${GET_REQUIREMENTS} =     Make Multiple Get Requests
     Set Test Variable   @{GET_REQUIREMENTS}
 
 Read Results Are Stored In Requirements File
@@ -268,7 +268,7 @@ Read Results Are Stored In Requirements File
 
 Multiple Read Requests Are Made Based On Requirements
     ${GET_REQUIREMENTS} =  Read File Content  filename=${ADMIN_READ_PARAMETERS_FILE}
-    Make Multiple Get Requests With Different Headers   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
+    Make Multiple Get Requests   get_requirements=${GET_REQUIREMENTS}  # modifies ${GET_REQUIREMENTS}
     Set Test Variable   ${GET_REQUIREMENTS}
 
 Observed Read Respond Codes Match Expected Read Respond Codes
