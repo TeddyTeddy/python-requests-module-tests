@@ -255,9 +255,20 @@ class AdminUser:
             return delete_requirements
 
     @keyword
-    def make_multiple_create_requests_with_different_headers(self, posting_to_create):
-        if False:
-            pass
+    def make_multiple_create_requests_with_different_headers(self, posting_to_create, create_requirements):
+        if create_requirements:
+            posting_to_create_exists = False  # in the System Under Test
+            for r in create_requirements:
+                if posting_to_create_exists:  # in the System Under Test
+                    # API does not allow creation of another posting with the same title; returns 400
+                    delete_response = self.make_delete_request(posting_to_create)
+                    assert delete_response.status_code == 200
+                final_create_headers = form_headers(r[0], self._admin['POST_REQUEST_HEADERS'])
+                # attempt to make post request with final_create_headers
+                post_response = self.make_post_request(posting=posting_to_create, payload_encoding=None,
+                                                       content_type_header=None, headers=final_create_headers)
+                update_requirements(requirements=create_requirements, headers_keys=r[0], observed_response_code=post_response.status_code)
+                posting_to_create_exists = (300 > post_response.status_code >= 200)
         else:
             posting_to_create_exists = False  # in the System Under Test
             create_requirements = []

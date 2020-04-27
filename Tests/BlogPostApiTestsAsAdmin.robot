@@ -336,6 +336,15 @@ Multiple Create Requests On "Random Target Posting" Resource Are Made With Diffe
 Create Results Are Stored In Requirements File
     Write To File  filename=${ADMIN_CREATE_REQUIREMENTS_FILE}  source=${CREATE_REQUIREMENTS}
 
+Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
+    ${CREATE_REQUIREMENTS} =  Read File Content  filename=${ADMIN_CREATE_REQUIREMENTS_FILE}
+    Make Multiple Create Requests With Different Headers   target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]    create_requirements=${CREATE_REQUIREMENTS}  # modifies ${CREATE_REQUIREMENTS}
+    Set Test Variable   ${CREATE_REQUIREMENTS}
+
+Observed Create Respond Codes Match Expected Create Respond Codes
+    ${all_expected_vs_observed_create_response_codes_match} =  Compare Expected Vs Observed Response Codes  requirements=${CREATE_REQUIREMENTS}
+    Should Be True  ${all_expected_vs_observed_create_response_codes_match}
+
 *** Test Cases ***
 #########################  POSITIVE TESTS ################################################
 Checking BlogPostAPI specification
@@ -514,6 +523,11 @@ Gather The Results of Several Create Requests With Different Headers
     Given "Target Postings" Must Not Be Registered In The System
     When Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Create Results Are Stored In Requirements File
+
+Make Several Create Requests With Different Headers
+    [Tags]      admin-doing-create-with-different-request-headers
+    When Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
+    Then Observed Create Respond Codes Match Expected Create Respond Codes
 
 Gather The Results of Several Read Requests With Different Headers
     [Tags]      requirements-gathering      admin-read-requirements
