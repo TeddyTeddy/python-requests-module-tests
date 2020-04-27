@@ -184,7 +184,7 @@ class AdminUser:
             return self._session.put(url=posting['url'], headers=final_put_request_headers, json=posting, cookies=self._additional_put_cookie_tabstyle)
 
     @keyword
-    def make_multiple_put_requests_with_different_headers(self, posting, put_requirements=None):
+    def make_multiple_put_requests(self, posting, put_requirements=None):
         if put_requirements:
             for put_headers_keys, final_put_headers in populate_request_headers(self.get_put_request_headers(posting)):
                 put_response = self.make_put_request(posting, headers=final_put_headers)

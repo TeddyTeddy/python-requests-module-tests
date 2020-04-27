@@ -277,15 +277,15 @@ Observed Read Respond Codes Match Expected Read Respond Codes
 
 
 Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
-    ${PUT_REQUIREMENTS} =    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}
+    ${PUT_REQUIREMENTS} =    Make Multiple Put Requests   posting=${RANDOM_TARGET_POSTING}
     Set Test Variable   @{PUT_REQUIREMENTS}
 
 Update Results Are Stored In Requirements File
-    Write To File  filename=${ADMIN_UPDATE_REQUIREMENTS_FILE}  source=${PUT_REQUIREMENTS}
+    Write To File  filename=${ADMIN_UPDATE_PARAMETERS_FILE}  source=${PUT_REQUIREMENTS}
 
 Multiple Update Requests On "Random Target Posting" Resource Are Made According To Requirements
-    ${PUT_REQUIREMENTS} =  Read File Content  filename=${ADMIN_UPDATE_REQUIREMENTS_FILE}
-    Make Multiple Put Requests With Different Headers   posting=${RANDOM_TARGET_POSTING}    put_requirements=${PUT_REQUIREMENTS}  # modifies ${PUT_REQUIREMENTS}
+    ${PUT_REQUIREMENTS} =  Read File Content  filename=${ADMIN_UPDATE_PARAMETERS_FILE}
+    Make Multiple Put Requests   posting=${RANDOM_TARGET_POSTING}    put_requirements=${PUT_REQUIREMENTS}  # modifies ${PUT_REQUIREMENTS}
     Set Test Variable   ${PUT_REQUIREMENTS}
 
 Observed Update Respond Codes Match Expected Update Respond Codes
@@ -541,8 +541,8 @@ Making Several Read Requests With Different Headers
     When Multiple Read Requests Are Made Based On Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
-Gather The Results of Several Update Requests With Different Headers
-    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-update-requirements
+Gathering Requirements : Admin Doing Several Update Requests With Different Headers
+    [Tags]      requirements-gathering      admin-parameters-CRUDO    admin-update-parameters       parametes-being-headers
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
