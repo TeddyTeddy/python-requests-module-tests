@@ -519,14 +519,14 @@ Create Postings With Different Items
     Then Only The Postings Having Expected Create Response Code "201-Created" Got Created In The System
     Then "Registered Postings" Must Comply With "Posting Spec"
 
-Gather The Results of Several Create Requests With Different Headers
-    [Tags]      admin-parameters-CRUDO    requirements-gathering      admin-create-requirements
+Gathering Requirements : Admin Doing Several Create Requests With Parameters
+    [Tags]      requirements-gathering      admin-parameters-CRUDO      admin-create-parameters       parametes-being-headers
     Given "Target Postings" Must Not Be Registered In The System
     When Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Create Results Are Stored In Requirements File
 
-Make Several Create Requests With Different Headers
-    [Tags]      admin-parameters-CRUDO    admin-doing-create-with-different-request-headers
+Making Several Create Requests With Different Headers
+    [Tags]      admin-parameters-CRUDO    admin-create-parameters       parametes-being-headers
     When Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Create Respond Codes Match Expected Create Respond Codes
 

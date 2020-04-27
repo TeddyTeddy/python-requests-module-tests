@@ -255,7 +255,7 @@ class AdminUser:
             return delete_requirements
 
     @keyword
-    def make_multiple_create_requests_with_different_headers(self, posting_to_create, create_requirements):
+    def make_multiple_create_requests_with_different_headers(self, posting_to_create, create_requirements=None):
         if create_requirements:
             posting_to_create_exists = False  # in the System Under Test
             for r in create_requirements:
@@ -269,7 +269,7 @@ class AdminUser:
                                                        content_type_header=None, headers=final_create_headers)
                 update_requirements(requirements=create_requirements, headers_keys=r[0], observed_response_code=post_response.status_code)
                 posting_to_create_exists = (300 > post_response.status_code >= 200)
-        else:
+        else: # this branch is to create create_requirements
             posting_to_create_exists = False  # in the System Under Test
             create_requirements = []
             for create_headers_key_combo, create_headers in populate_request_headers(self._admin['POST_REQUEST_HEADERS']):
