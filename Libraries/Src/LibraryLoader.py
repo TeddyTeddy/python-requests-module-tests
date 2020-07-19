@@ -1,29 +1,27 @@
+
 from robot.libraries.BuiltIn import BuiltIn
 
-
 class LibraryLoader:
-    """
-    https://www.tutorialspoint.com/python_design_patterns/python_design_patterns_singleton.htm
-    """
     __instance = None
-
     def __init__(self):
-        if LibraryLoader.__instance is not None:
-            raise Exception('LibraryLoader class is a singleton. Use get_instance method instead')
-        LibraryLoader.__instance = self
+        if self.__class__.__instance is not None:
+            raise AssertionError("LibraryLoader is a singleton. Call LibraryLoader.get_instance() to get the instance")
+        self.__class__.__instance = self
         self.builtin = BuiltIn()
-        self._request_library = None  # lazy initialization
 
-    @staticmethod
-    def get_instance():
-        if LibraryLoader.__instance is None:
-            LibraryLoader()
-        return LibraryLoader.__instance
+    @classmethod
+    def get_instance(cls):
+        if cls.__instance is not None:
+            return cls.__instance
+        return cls()
 
 
-if __name__ == '__main__':
-    ll = LibraryLoader.get_instance()
-    print(dir(LibraryLoader))
+if __name__ == '__main__':  # python -m LibraryLoader
+    ll_one = LibraryLoader.get_instance()
+    ll_two = LibraryLoader.get_instance()
+    if ll_one is not ll_two:
+        raise AssertionError('Error: LibraryLoader is not a singleton!')
+    print(dir(ll_one))
 
 
 
