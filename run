@@ -1,1 +1,1 @@
-python -m robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/BlogPostApiTestsAsAdmin.robot	Tests/BlogPostApiTestsAsNoPriviligeUser.robot
+python3 -m robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/BlogPostApiTestsAsAdmin.robot	Tests/BlogPostApiTestsAsNoPriviligeUser.robot
