@@ -1,5 +1,5 @@
 *** Settings ***
-Library     Collections
-Library     Utilities.py
-Variables   CommonVariables.py
+Library     		Collections
+Library     		Utilities.py
+Variables           	CommonVariables.py
 

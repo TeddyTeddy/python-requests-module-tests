@@ -16,14 +16,12 @@ Resource         CommonResource.robot
 Suite Setup      Suite Setup
 Test Teardown    Test Teardown
 
-# To Run
-# python -m robot  --pythonpath Libraries/Src -d Results/ Tests/BlogPostApiTestsAsNoPriviligeUser.robot
 
 *** Keywords ***
 Suite Setup
     ${posting_spec} =   Set Variable    ${ADMIN}[EXPECTED_API_SPEC][actions][POST]
     Set Suite Variable      ${POSTING_SPEC}     ${posting_spec}
-    "Target Postings" Are Deleted
+    "Target Postings" Are Deleted   	# in case, admin user/no privilige user tests leaks target postings
     "Pre-Set Postings" Are Cached
 
 Test Teardown
@@ -54,20 +52,11 @@ BlogPostAPI Specification Is Queried
         Delete Matching Posting    ${iptd}
     END
 
-Only "Pre-Set Postings" Are Left In The System
-    Should Be True  $REGISTERED_POSTINGS == $PRE_SET_POSTINGS
-
-"Target Postings" Must Not Be Registered In The System
-    "Registered Postings" Are Read
-    ${none_of_target_postings_found} =  Is None Found  subset=${INCOMPLETE_TARGET_POSTINGS}  superset=${REGISTERED_POSTINGS}
-    Should Be True      ${none_of_target_postings_found}
-
 "Pre-Set Postings" Are Cached
     "Registered Postings" Are Read
     Set Suite Variable      @{PRE_SET_POSTINGS}     @{REGISTERED_POSTINGS}
 
 "Target Postings" Are Attempted To Be Created
-    # TODO: Move the logic below to NoPriviligeUser.py
     ${ALL_CREATE_ATTEMPTS_FAILED_WITH_401} =     Set Variable  ${True}
     FOR     ${ptc}    IN  @{INCOMPLETE_TARGET_POSTINGS}  # ptc: posting_to_create
         Create Posting    posting=${ptc}
@@ -84,7 +73,6 @@ Update Posting
     Set Test Variable   ${PUT_RESPONSE}
 
 "Pre-Set Postings" Are Attempted To Be Updated
-    # TODO: Move the logic below to NoPriviligeUser.py
     ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_401} =     Set Variable  ${True}
     FOR     ${ptu}    IN  @{PRE_SET_POSTINGS}  # ptu: posting_to_update
         Update Posting    posting=${ptu}
@@ -101,7 +89,6 @@ Delete Posting
     Set Test Variable       ${DELETE_RESPONSE}
 
 "Pre-Set Postings" Are Attempted To Be Deleted
-    # TODO: Move the logic below to NoPriviligeUser.py
     ${ALL_DELETE_ATTEMPTS_FAILED_WITH_401} =     Set Variable  ${True}
     FOR     ${ptd}    IN  @{PRE_SET_POSTINGS}  # ptu: posting_to_delete
         Delete Posting    posting=${ptd}

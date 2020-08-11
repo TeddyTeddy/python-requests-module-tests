@@ -12,8 +12,7 @@ Suite Setup      Suite Setup
 Test Teardown    Test Teardown
 Test Setup       Test Setup
 
-# To Run
-# python -m robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/BlogPostApiTestsAsAdmin.robot
+
 
 *** Keywords ***
 Suite Setup
@@ -49,7 +48,6 @@ Verify Post Response Success Code
     END
 
 "Target Postings" Are Attempted To Be Re-Created
-    # TODO: Consider to move the below logic to AdminUser.py
     ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
     FOR     ${p}    IN  @{INCOMPLETE_TARGET_POSTINGS}
         Create Posting     posting=${p}
@@ -71,20 +69,6 @@ Non-Registered "Target Postings" Are Attempted To Be Updated
 
 All Update Responses Have Status Code "404-Not-Found"
     Should Be True      ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_404}
-
-"Target Postings" List Is Not Empty
-    ${is_empty} =  Evaluate     len($TARGET_POSTINGS) == 0
-    Should Not Be True  ${is_empty}
-
-Must Be Registered In The System
-    [Arguments]     ${posting}
-    "Registered Postings" Are Read
-    @{expected_postings}=    Create List    ${posting}
-    ${is_subset} =  Is Subset   subset=${expected_postings}    superset=${REGISTERED_POSTINGS}
-    Should Be True   ${is_subset}
-
-"Null Title Posting" Must Be Registered In The System
-    Must Be Registered In The System    posting=${NULL_TITLE_POSTING}
 
 "Random Target Posting" Must Be Registered In The System
     "Registered Postings" Are Read
@@ -116,10 +100,6 @@ BlogPostAPI Specification Is Queried
     ${OPTIONS_RESPONSE} =       Make Options Request
     Set Test Variable   ${OPTIONS_RESPONSE}
 
-"Target Postings" Must Have Been Updated In The System
-    ${is_subset} =  Is Subset   subset=${TARGET_POSTINGS}    superset=${REGISTERED_POSTINGS}
-    Should Be True   ${is_subset}
-
 Verify Delete Response Success Code
     Should Be Equal As Integers 	${DELETE_RESPONSE.status_code} 	200  # OK
 
@@ -140,14 +120,6 @@ Verify Delete Response Success Code
 
 All Delete Responses Have Status Code "404-Not Found"
     Should Be True   ${ALL_DELETE_ATTEMPTS_FAILED_WITH_404}
-
-Only "Pre-Set Postings" Are Left In The System
-    Should Be True  $REGISTERED_POSTINGS == $PRE_SET_POSTINGS
-
-"Target Postings" Must Not Be Registered In The System
-    "Registered Postings" Are Read
-    ${none_of_target_postings_found} =  Is None Found  subset=${INCOMPLETE_TARGET_POSTINGS}  superset=${REGISTERED_POSTINGS}
-    Should Be True      ${none_of_target_postings_found}
 
 "Parameterized Postings" Must Not Be Registered In The System
     "Registered Postings" Are Read
@@ -197,9 +169,9 @@ Read Response Should Be "404-Not Found"
     Should Be True   $GET_RESPONSE.status_code == 404
 
 "Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
-    # TODO: Consider to move the below logic to AdminUser.py
     ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
     FOR     ${p}    IN  @{TARGET_POSTINGS}
+    	Set To Dictionary   ${p}   content    ${OVERWRITTEN_CONTENT}
         Update Posting     posting=${p}     payload_encoding=Form   content_type_header=JSON
         ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_UPDATE_ATTEMPTS_FAILED_WITH_400 and $PUT_RESPONSE.status_code==400
     END
@@ -209,19 +181,18 @@ All Update Responses Have Status Code "400-Bad Request"
     Should Be True  ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400}
 
 "Target Postings" Are Attempted To Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
-    # TODO: Consider to move the below logic to AdminUser.py
     ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
     FOR     ${p}    IN  @{TARGET_POSTINGS}
-        Create Posting     posting=${p}     payload_encoding=JSON   content_type_header=Form
-        Log     ${POST_RESPONSE.status_code}
-        ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_UPDATE_ATTEMPTS_FAILED_WITH_400 and $POST_RESPONSE.status_code==400
+    	Set To Dictionary   ${p}   content    ${OVERWRITTEN_CONTENT}
+        Update Posting     posting=${p}     payload_encoding=JSON   content_type_header=Form
+        Log     ${PUT_RESPONSE.status_code}
+        ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_UPDATE_ATTEMPTS_FAILED_WITH_400 and $PUT_RESPONSE.status_code==400
     END
     Set Test Variable    ${ALL_UPDATE_ATTEMPTS_FAILED_WITH_400}
 
 "Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
-    # TODO: Consider to move the below logic to AdminUser.py
     ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
-    FOR     ${p}    IN  @{TARGET_POSTINGS}
+    FOR     ${p}    IN  @{INCOMPLETE_TARGET_POSTINGS}
         Create Posting     posting=${p}     payload_encoding=Form   content_type_header=JSON
         ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_CREATE_ATTEMPTS_FAILED_WITH_400 and $POST_RESPONSE.status_code==400
     END
@@ -231,9 +202,8 @@ All Create Responses Have Status Code "400-Bad Request
     Should Be True  ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400}
 
 "Target Postings" Are Attempted To Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
-    # TODO: Consider to move the below logic to AdminUser.py
     ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Set Variable    ${True}
-    FOR     ${p}    IN  @{TARGET_POSTINGS}
+    FOR     ${p}    IN  @{INCOMPLETE_TARGET_POSTINGS}
         Create Posting     posting=${p}     payload_encoding=JSON   content_type_header=Form
         Log     ${POST_RESPONSE.status_code}
         ${ALL_CREATE_ATTEMPTS_FAILED_WITH_400} =    Evaluate    $ALL_CREATE_ATTEMPTS_FAILED_WITH_400 and $POST_RESPONSE.status_code==400
@@ -325,11 +295,11 @@ Options Results Are Stored In Requirements File
     Write To File  filename=${ADMIN_OPTIONS_PARAMETERS_FILE}  source=${OPTIONS_REQUIREMENTS}
 
 "Target Postings" Must Not Have Been Updated
-    @{TARGET_POSTINGS_B4_UPDATE_ATTEMPT} =   Copy List      ${TARGET_POSTINGS}
+    @{TARGET_POSTINGS_AFTER_UPDATE_ATTEMPT} =   Copy List      ${TARGET_POSTINGS}
     "Target Postings" Are Read
-    Should Be True      $TARGET_POSTINGS_B4_UPDATE_ATTEMPT==$TARGET_POSTINGS
+    Should Be True      $TARGET_POSTINGS_AFTER_UPDATE_ATTEMPT!=$TARGET_POSTINGS
 
-Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
+Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Header Combinations
     ${CREATE_REQUIREMENTS} =     Make Multiple Create Requests     target_posting=${INCOMPLETE_TARGET_POSTINGS}[${1}]
     Set Test Variable   @{CREATE_REQUIREMENTS}
 
@@ -377,6 +347,7 @@ Updating "Target Postings"
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then "Target Postings" Must Have Been Updated In The System
+    # TODO: Then "Pre-Set Postings" Must Not Have Been Modified
 
 Deleting "Target Postings"
     [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-success-as-admin
@@ -406,6 +377,7 @@ Updating "Random Target Posting" With Missing "title" Field And Modified "conten
     When "Random Target Posting" Is Updated To The System
     Then Update Response Has Status Code 200
     Then "Random Target Posting" Must Be Registered In The System
+    # TODO: Then Other Postings Are Not Modified
 
 Updating "Random Target Posting" With Missing "content" Field And Modified "title" Field
     [Documentation]     Note that title & content are required fields in a create request.
@@ -424,6 +396,7 @@ Updating "Random Target Posting" With Missing "content" Field And Modified "titl
     When "Random Target Posting" Is Updated To The System
     Then Update Response Has Status Code 200
     Then "Random Target Posting" Must Be Registered In The System
+    # TODO: Then Other Postings Are Not Modified
 
 #########################  NEGATIVE TESTS ################################################
 
@@ -458,13 +431,14 @@ Attempting To Update "Non-Existing Postings" Fails
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
+    # TODO: Then "Pre-Set Postings" Must Not Have Been Modified
 
 Attempting To Read Postings with Invalid URI
     [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     When Bad Read Request Is Made With Invalid URI
     Then Read Response Should Be "404-Not Found"
 
-"Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
+"Target Postings" Must Not Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
     [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Must Not Be Registered In The System
     When "Target Postings" Are Attempted To Be Created Using Form Encoded Payload And With JSON "Content-Type" Header
@@ -474,7 +448,7 @@ Attempting To Read Postings with Invalid URI
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
 
-"Target Postings" Are Attempted To Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
+"Target Postings" Must Not Be Created Using JSON Encoded Payload And With Form "Content-Type" Header
     [Documentation]     The system under test should not allow creation of a posting, which is JSON encoded in POST request
     ...                 and the POST request tells that "Content-Type" is Form. This test should be correct and the system
     ...                 under test must be changed.
@@ -487,7 +461,7 @@ Attempting To Read Postings with Invalid URI
     Then "Registered Postings" Must Comply With "Posting Spec"
     Then Only "Pre-Set Postings" Are Left In The System
 
-"Target Postings" Are Attempted To Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
+"Target Postings" Must Not Be Updated Using Form Encoded Payload And With JSON "Content-Type" Header
     [Tags]                  BAT-as-admin    CRUD-operations-as-admin     CRUD-failure-as-admin
     Given "Target Postings" Are Created
     Given "Target Postings" Are Read
@@ -496,8 +470,9 @@ Attempting To Read Postings with Invalid URI
     Then "Target Postings" Must Not Have Been Updated
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
+    # TODO: Then "Pre-Set Postings" Must Not Have Been Modified
 
-"Target Postings" Are Attempted To Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
+"Target Postings" Must Not Be Updated Using JSON Encoded Payload And With Form "Content-Type" Header
     [Documentation]     The system under test should not allow update of a posting, which is JSON encoded in PUT request,
     ...                 and the PUT request tells that "Content-Type" is Form. This test should be correct and the system
     ...                 under test must be changed.
@@ -509,6 +484,7 @@ Attempting To Read Postings with Invalid URI
     Then "Target Postings" Must Not Have Been Updated
     Then "Registered Postings" Are Read
     Then "Registered Postings" Must Comply With "Posting Spec"
+    # TODO: Then "Pre-Set Postings" Must Not Have Been Modified
 
 ############    A. POISED-CRUDO Tests #######################################################################################
 ############    A.1 (P)arameters-CRUDO Tests
@@ -520,13 +496,13 @@ Create Postings With Different Items
     Then Only The Postings Having Expected Create Response Code "201-Created" Got Created In The System
     Then "Registered Postings" Must Comply With "Posting Spec"
 
-Gathering Requirements : Admin Doing Several Create Requests With Parameters
+Gathering Requirements : Admin Doing Several Create Requests With Different Header Combinations
     [Tags]      requirements-gathering      admin-parameters-CRUDO      admin-create-parameters       parametes-being-headers
     Given "Target Postings" Must Not Be Registered In The System
-    When Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Headers
+    When Multiple Create Requests On "Random Target Posting" Resource Are Made With Different Header Combinations
     Then Create Results Are Stored In Requirements File
 
-Making Several Create Requests With Different Headers
+Making Several Create Requests With Different Header Combinations
     [Tags]      admin-parameters-CRUDO    admin-create-parameters       parametes-being-headers
     When Multiple Create Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Create Respond Codes Match Expected Create Respond Codes
@@ -541,7 +517,7 @@ Making Several Read Requests With Different Headers
     When Multiple Read Requests Are Made Based On Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
 
-Gathering Requirements : Admin Doing Several Update Requests With Different Headers
+Gathering Requirements : Admin Doing Several Update Requests With Different Header Combinations
     [Tags]      requirements-gathering      admin-parameters-CRUDO    admin-update-parameters       parametes-being-headers
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
@@ -567,7 +543,7 @@ Gathering Requirements : Admin Doing Several Delete Requests With Different Head
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Delete Results Are Stored In Requirements File
 
-Making Several Delete Requests With Different Headers
+Making Several Delete Requests With Different Header Combinations
     [Tags]      admin-parameters-CRUDO    admin-doing-delete-with-different-request-headers
     When Multiple Delete Requests On "Random Target Posting" Resource Are Made According To Requirements
     Then Observed Delete Respond Codes Match Expected Delete Respond Codes
@@ -577,7 +553,7 @@ Gathering Requirements : Admin Doing Several Options Requests With Different Hea
     When Multiple Options Requests Are Made With Different Headers
     Then Options Results Are Stored In Requirements File
 
-Making Several Options Requests With Different Headers
+Making Several Options Requests With Different Header Combinations
     [Tags]      admin-parameters-CRUDO    admin-doing-options-with-different-request-headers
     When Multiple Options Requests Are Made Based On Requirements
     Then Observed Options Respond Codes Match Expected Options Respond Codes

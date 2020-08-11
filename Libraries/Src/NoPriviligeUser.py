@@ -1,9 +1,7 @@
 from LibraryLoader import LibraryLoader
 from robot.api.deco import keyword
-from Utilities import get_uri
 from robot.api import logger
 import requests
-
 class NoPriviligeUser:
     """
     This Robot Library makes requests to BlogPostAPI as a User with no rights/priviligies.
@@ -55,15 +53,4 @@ class NoPriviligeUser:
     def make_delete_request(self, posting):
         self._user['DELETE_REQUEST_HEADERS']['Referer'] = posting['url']
         return requests.delete( url=posting['url'], headers=self._user['DELETE_REQUEST_HEADERS'],  data=posting )
-
-
-
-
-
-
-
-
-
-
-
 

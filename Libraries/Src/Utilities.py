@@ -1,39 +1,46 @@
 from urllib.parse import urlparse
 from robot.api.deco import keyword
 import re, os, ast
-import CommonVariables
 from LibraryLoader import LibraryLoader
 from itertools import combinations
 from robot.api import logger
 
 
 def validate_url(url):
+    # https://stackoverflow.com/questions/7160737/python-how-to-validate-a-url-in-python-malformed-or-not
     try:
         result = urlparse(url)
-        assert all([result.scheme, result.netloc, result.path])
+        assert '' not in [result.scheme, result.netloc, result.path]
     except ValueError:
         assert False
 
 def get_csrfmiddlewaretoken(response_text):
-    pattern = "<input type=\\'(hidden)\\' name=\\'(csrfmiddlewaretoken)\\' value=\\'(.+)\\' "
-    match = re.search(pattern, response_text)
-    if match and len(match.groups()) == 3:  # bingo! a match with the pattern found
-        return match.groups()[2]
-
-    pattern = 'csrfToken: "(.+)"\\n'
+    """
+        part of response_text
+        "<form action=\"/admin/login/\" method=\"post\" id=\"login-form\"><input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'N3hEAMRIsVqU7C3FJcBxJe79eRzfBrqegZpfzXgWau36AY4SYqL4TxTiC4g8g7EF\' />"
+    """
+    pattern = re.compile(r"<input type='(?:hidden)' name='(?:csrfmiddlewaretoken)' value='(.+)' ")
     match = re.search(pattern, response_text)
     if match and len(match.groups()) == 1:  # bingo! a match with the pattern found
         return match.groups()[0]
 
-    raise AssertionError('neither csrfmiddlewaretoken or csrfToken are found')
+    raise AssertionError('csrfmiddlewaretoken not found')
 
-def get_uri(url):
-    # url is for ex: 'https://glacial-earth-31542.herokuapp.com/api/postings/11/'
-    api_base_url = CommonVariables.get_variables()['API_BASE_URL']  # 'https://glacial-earth-31542.herokuapp.com'
-    pattern = f'{api_base_url}(.+)'
-    match = re.match(pattern, url)
-    return match.groups()[0]    # /api/postings/11/
+def get_csrf_token(response_text):
+    """
+        part of response_text:
+            <script>
+                window.drf = {
+                csrfHeaderName: "X-CSRFTOKEN",
+                csrfToken: "Ii71qEPN5tXhtY4hTiu340cVlQaN550DLJttJmYegcjFerybS3E9iSUW3jmqkzUo"
+            };
+    """
+    pattern = re.compile(r'csrfToken: "(.+)"$', re.M)
+    match = re.search(pattern, response_text)
+    if match and len(match.groups()) == 1:  # bingo! a match with the pattern found
+        return match.groups()[0]
 
+    raise AssertionError('csrfToken not found')
 
 def verify_fields(posting, posting_spec):
     for field in posting_spec:
@@ -127,8 +134,8 @@ def target_postings_are_updated():
     for tp in target_postings:  # tp: target_posting
         tp['content'] = 'modified content'
         # test call:
-        loader.builtin.run_keyword('Make Put Request',  tp)  # TODO: Cannot receive put response
-        
+        loader.builtin.run_keyword('Make Put Request',  tp)  # NOTE: Cannot receive put response
+
     loader.builtin.set_test_variable('${TARGET_POSTINGS}', target_postings)
 
 
@@ -158,7 +165,7 @@ def delete_postings(candidate_postings_to_delete,  postings_to_skip):
     loader = LibraryLoader.get_instance()  # singleton
     for p in candidate_postings_to_delete:
         if p not in postings_to_skip:
-            loader.builtin.run_keyword('Make Delete Request',  p)  # TODO: Cannot receive DELETE response
+            loader.builtin.run_keyword('Make Delete Request',  p)  # NOTE: Cannot receive DELETE response
 
 
 @keyword
@@ -167,10 +174,10 @@ def extract_postings(item_list, include_expected_create_response_code=None, excl
         :param  item_list: it is a list where each item is a list:
                 Each inner item is in the following format:
                 inner item: [posting, expected_post_response_code, (received_post_response_code)]
-        :return  a list of postings from the inner items of admin_doing_create_with_parameters
+        :return  a list of postings from the inner items of ${ADMIN}[DOING_CREATE_WITH_PARAMETERS]
 
         Example:
-        admin_doing_create_with_parameters = [
+        ${ADMIN}[DOING_CREATE_WITH_PARAMETERS] = [
             [{'title': '', 'content': ''}, 201],
             [{'title': True, 'content': True}, 400],
         ]
@@ -224,11 +231,11 @@ def populate_request_headers(original_request_headers):
             yield key_combination, form_headers(key_combination, original_request_headers)
         length+=1
 
-    yield (), {}   # repressents a key combination of length zero
+    yield (), {}   # represents a key combination of length zero
 
 
 def get_path_to_data_folder():
-    current_abs_path = os.path.abspath(os.getcwd())     # gets the current abs path to this py file
+    current_abs_path = os.path.abspath(os.getcwd())     # gets the current abs path to the project folder
     sep = os.path.sep  # get os specific path seperator (either '\' for Windows or '/' for linux)
     return f'{current_abs_path}{sep}Data{sep}'               # forms src_abs_path from the grabbed string
 
@@ -253,15 +260,15 @@ def read_file_content(filename):
     sep = os.path.sep  # get os specific path seperator (either '\' for Windows or '/' for linux)
     full_path_to_file = f'{data_abs_path}{sep}{filename}'
     f = open(full_path_to_file, "r")
-    contents = f.read()
+    content = f.read()
     f.close()
-    return ast.literal_eval(contents)
+    return ast.literal_eval(content)
 
 
-def update_requirements(requirements, headers_keys, observed_response_code):
-    for item in requirements:
-        if item[0] == headers_keys:
-            if len(item) == 3:
-                item.pop()
-            item.insert(2, observed_response_code)
+def update_requirements(requirements, first_item, observed_response_code):
+    for inner_lst in requirements:
+        if inner_lst[0] == first_item:
+            if len(inner_lst) == 3:
+                inner_lst.pop()
+            inner_lst.insert(2, observed_response_code)
             break

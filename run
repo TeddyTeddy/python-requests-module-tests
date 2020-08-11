@@ -1,1 +1,5 @@
-python3 -m robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/BlogPostApiTestsAsAdmin.robot	Tests/BlogPostApiTestsAsNoPriviligeUser.robot
+# robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/BlogPostApiTestsAsAdmin.robot
+# robot  --pythonpath Libraries/Src -d Results/ --include requirements-gathering Tests/BlogPostApiTestsAsAdmin.robot
+# robot  --pythonpath Libraries/Src -d Results/ -t "Gathering Requirements : Admin Doing Several Options Requests With Different Headers" Tests/BlogPostApiTestsAsAdmin.robot
+# robot  --pythonpath Libraries/Src -d Results/ Tests/BlogPostApiTestsAsNoPriviligeUser.robot
+robot  --pythonpath Libraries/Src --exclude requirements-gathering -d Results/ Tests/

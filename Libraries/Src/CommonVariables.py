@@ -1,9 +1,7 @@
 def get_variables():
     variables = {
-        'ADMIN_SESSION': 'Admin Session',
         'API_BASE_URL': 'https://glacial-earth-31542.herokuapp.com',
         'ADMIN_LOGIN_URI': '/admin/login/',
-        'ACCEPT_APPLICATION_JSON_HEADER' : 'application/json',
         'ACCEPT_TEXT_HTML_HEADER' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'ADMIN_LOGIN_QUERY_PARAMS': {'next':'/admin/'},
         'CONTENT_TYPE_IS_FORM_HEADER': 'application/x-www-form-urlencoded',
@@ -22,14 +20,14 @@ def get_variables():
             'POST_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Content-Type': 'application/json', # default value for creating a posting, can be overwritten by CONTENT_TYPE_IS_FORM_HEADER in ChainMap implementation
-                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from POST posting form				
+                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrf token from POST posting form				
                 'Accept': 'application/json',
                 'Referer': 'https://glacial-earth-31542.herokuapp.com/api/postings/',
             },
             'PUT_REQUEST_HEADERS': {
                 'Host': 'glacial-earth-31542.herokuapp.com',
                 'Content-Type': 'application/json',
-                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrfmiddleware token from put posting form
+                'X-CSRFTOKEN': '## DYNAMIC CONTENT ##', # expects the csrf token from put posting form
                 'Referer': '## DYNAMIC CONTENT ##',  # expects the url of the posting resource here! must be overwritten by url of the posting in ChainMap implementation
             },
             'DELETE_REQUEST_HEADERS': {
@@ -72,14 +70,14 @@ def get_variables():
                         },
                         'title': {
                             'type': 'string',
-                            'required': True,
+                            'required': True,	# this is different from observed response!
                             'read_only': False,
                             'label': 'Title',
                             'max_length': 120
                         },
                         'content': {
                             'type': 'string',
-                            'required': True,
+                            'required': True,	# this is different from observed response!
                             'read_only': False,
                             'label': 'Content',
                             'max_length': 120
@@ -178,6 +176,3 @@ def get_variables():
         'INVALID_POSTINGS_URI': '/api/invalid/uri',
     }
     return variables
-
-
-
