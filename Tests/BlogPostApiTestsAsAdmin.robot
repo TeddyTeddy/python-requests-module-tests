@@ -512,7 +512,7 @@ Gathering Requirements : Admin Doing Several Read Requests With Different Header
     When Multiple Read Requests Are Made With Different Headers
     Then Read Results Are Stored In Requirements File
 
-Making Several Read Requests With Different Headers
+Making Several Read Requests With Different Header Combinations
     [Tags]      admin-parameters-CRUDO    admin-doing-reads-with-different-request-headers
     When Multiple Read Requests Are Made Based On Requirements
     Then Observed Read Respond Codes Match Expected Read Respond Codes
@@ -527,7 +527,7 @@ Gathering Requirements : Admin Doing Several Update Requests With Different Head
     When Multiple Update Requests On "Random Target Posting" Resource Are Made With Different Headers
     Then Update Results Are Stored In Requirements File
 
-Making Several Update Requests With Different Headers
+Making Several Update Requests With Different Header Combinations
     [Tags]      admin-parameters-CRUDO    admin-doing-update-with-different-request-headers
     Given "Target Postings" Must Not Be Registered In The System
     Given "Target Postings" Are Created
